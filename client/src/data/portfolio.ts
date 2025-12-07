@@ -15,7 +15,7 @@ export const portfolioData = {
       field: "Computer Science Engineering",
       school: "Lovely Professional University – Phagwara, Punjab",
       duration: "Aug 23 - Present",
-      cgpa: "7.61",
+      cgpa: "7.64",
     },
     {
       degree: "Higher Secondary Certificate",
@@ -34,14 +34,47 @@ export const portfolioData = {
   ],
 
   skills: {
-    languages: ["HTML", "CSS", "JavaScript", "PHP", "Node.js", "JSON", "C++", "Java"],
-    frameworks: ["React.js", "Next.js", "JQUERY", "Tailwind CSS"],
-    database: ["MySQL", "MongoDB"],
-    tools: ["Git", "GitHub", "VS Code"],
+    frontend: ["HTML5", "CSS3", "JavaScript", "Tailwind CSS", "Redux", "React Router"],
+    programmingLanguages: ["C", "C++", "Java", "Python", "JavaScript", "PHP"],
+    frameworks: ["React.js", "Next.js", "Express.js", "Node.js"],
+    database: ["Node.js", "Express.js", "MongoDB", "MySQL"],
+    tools: ["Git", "GitHub", "VS Code", "Postman", "Figma"],
     soft: ["Team Management", "Quick Learner", "Problem Solving", "Project Management"],
   },
 
   projects: [
+    {
+      title: "File Recovery System",
+      description:
+        "A web-based file management system built using Flask that allows users to upload and manage files efficiently with a distributed file system for storage.",
+      features: [
+        "User-friendly file upload and recovery system",
+        "Organized Distributed File System to manage uploaded files",
+        "File operations: upload, list, delete, rename, restore",
+        "Trash folder management for deleted files",
+        "Debug mode for easy development",
+      ],
+      tech: ["Python", "Flask", "HTML", "CSS", "JavaScript", "File System"],
+      highlights: "Clean architecture with virtual environment support and clear directory structure",
+      github: "https://github.com/Ankii04/File-Recovery-System",
+      demo: "https://file-recovery-system.vercel.app/",
+    },
+    {
+      title: "AI Medication Reminder Chatbot",
+      description:
+        "An intelligent chatbot application that helps users set medication reminders through natural language conversations with SMS notifications.",
+      features: [
+        "Natural language chat interface for setting reminders",
+        "Automatic extraction of medication names, times, and frequencies",
+        "SMS notifications via Twilio integration",
+        "Clean and modern UI built with React and Tailwind CSS",
+        "Real-time reminder list display",
+      ],
+      tech: ["Python", "React", "Tailwind CSS", "Google Gemini API", "Twilio", "Flask"],
+      highlights: "AI-powered medication management with seamless user experience",
+      github: "https://github.com/Ankii04/Ai-Medication-Reminder-Chatbot",
+      demo: "",
+    },
     {
       title: "Expense Sharing Website",
       description:
@@ -55,6 +88,8 @@ export const portfolioData = {
       ],
       tech: ["PHP", "MySQL", "HTML", "CSS", "JavaScript", "Google OAuth", "Razorpay"],
       highlights: "Responsive UI with interactive notifications and robust form validation",
+      github: "https://github.com/Ankii04/Expense-Sharing-Website",
+      demo: "",
     },
   ],
 

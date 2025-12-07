@@ -1,7 +1,7 @@
 import { Mail, Github, Linkedin, Download, Phone } from "lucide-react";
 
 interface SocialLinksProps {
-  email: string;
+  email?: string;
   github: string;
   linkedin: string;
   phone: string;
@@ -52,7 +52,7 @@ export default function SocialLinks({
       color: "hover:text-green-500 hover:border-green-500",
       bgColor: "hover:bg-green-500/10",
     },
-  ];
+  ].filter(link => link.id !== "email" || email); // Filter out email if undefined
 
   return (
     <div className={`flex items-center gap-4 ${className}`}>
