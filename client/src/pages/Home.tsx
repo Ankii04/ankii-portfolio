@@ -18,6 +18,13 @@ export default function Home() {
   const [skillsVisible, setSkillsVisible] = useState(false);
   const [isContactModalOpen, setIsContactModalOpen] = useState(false);
 
+  // Scroll animation states
+  const [aboutVisible, setAboutVisible] = useState(false);
+  const [projectsVisible, setProjectsVisible] = useState(false);
+  const [codingProfilesVisible, setCodingProfilesVisible] = useState(false);
+  const [githubVisible, setGithubVisible] = useState(false);
+  const [educationVisible, setEducationVisible] = useState(false);
+
   const scrollToSection = (sectionId: string) => {
     setActiveSection(sectionId);
     const element = document.getElementById(sectionId);
@@ -30,23 +37,31 @@ export default function Home() {
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
-          if (entry.target.id === "skills" && entry.isIntersecting) {
-            setSkillsVisible(true);
+          if (entry.isIntersecting) {
+            const id = entry.target.id;
+            if (id === "skills") setSkillsVisible(true);
+            if (id === "about") setAboutVisible(true);
+            if (id === "projects") setProjectsVisible(true);
+            if (id === "coding-profiles") setCodingProfilesVisible(true);
+            if (id === "github-contributions") setGithubVisible(true);
+            if (id === "education") setEducationVisible(true);
           }
         });
       },
       { threshold: 0.1 }
     );
 
-    const skillsSection = document.getElementById("skills");
-    if (skillsSection) {
-      observer.observe(skillsSection);
-    }
+    const sections = ["skills", "about", "projects", "coding-profiles", "github-contributions", "education"];
+    sections.forEach(id => {
+      const element = document.getElementById(id);
+      if (element) observer.observe(element);
+    });
 
     return () => {
-      if (skillsSection) {
-        observer.unobserve(skillsSection);
-      }
+      sections.forEach(id => {
+        const element = document.getElementById(id);
+        if (element) observer.unobserve(element);
+      });
     };
   }, []);
 
@@ -220,35 +235,35 @@ export default function Home() {
                   title="Frontend"
                   icon="🎨"
                   skills={portfolioData.skills.frontend}
-                  delay={100}
+                  delay={200}
                   visible={skillsVisible}
                 />
                 <SkillCategory
                   title="Languages"
                   icon="💻"
                   skills={portfolioData.skills.programmingLanguages}
-                  delay={200}
+                  delay={400}
                   visible={skillsVisible}
                 />
                 <SkillCategory
                   title="Backend & DB"
                   icon="🗄️"
                   skills={portfolioData.skills.database}
-                  delay={300}
+                  delay={600}
                   visible={skillsVisible}
                 />
                 <SkillCategory
                   title="Tools"
                   icon="🛠️"
                   skills={portfolioData.skills.tools}
-                  delay={400}
+                  delay={800}
                   visible={skillsVisible}
                 />
               </div>
             </div>
           </section>
 
-          <section id="projects" className="py-20 px-4">
+          <section id="projects" className={`py-20 px-4 transition-all duration-[1500ms] ${projectsVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
             <div className="max-w-6xl mx-auto">
               <h2 className="text-4xl md:text-5xl font-bold mb-4 text-center">Featured Projects</h2>
               <p className="text-center text-muted-foreground mb-12">
@@ -256,37 +271,60 @@ export default function Home() {
               </p>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 {portfolioData.projects.map((project, idx) => (
-                  <ProjectCard
+                  <div
                     key={idx}
-                    title={project.title}
-                    description={project.description}
-                    features={project.features}
-                    tech={project.tech}
-                    highlights={project.highlights}
-                    github={project.github}
-                    demo={project.demo}
-                  />
+                    className={`transition-all duration-1000 ${projectsVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}
+                    style={{ transitionDelay: projectsVisible ? `${idx * 200}ms` : '0ms' }}
+                  >
+                    <ProjectCard
+                      title={project.title}
+                      description={project.description}
+                      features={project.features}
+                      tech={project.tech}
+                      highlights={project.highlights}
+                      github={project.github}
+                      demo={project.demo}
+                    />
+                  </div>
                 ))}
               </div>
             </div>
           </section>
 
-          <section id="coding-profiles" className="py-20 px-4">
+          <section id="coding-profiles" className={`py-20 px-4 transition-all duration-[1500ms] ${codingProfilesVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
             <div className="max-w-4xl mx-auto text-center">
               <h2 className="text-4xl md:text-5xl font-bold mb-2 flex items-center justify-center gap-2">
                 <span role="img" aria-label="trophy">🏆</span> Coding Profiles
               </h2>
               <p className="text-muted-foreground mb-8">Solving problems and building logical thinking through coding platforms.</p>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-8 justify-center">
-                <a href="https://leetcode.com/" target="_blank" rel="noopener noreferrer" className={`${theme === "dark" ? "bg-[#1e293b]/80" : "bg-[#f0f0f0]/80"} backdrop-blur-xl hover:border-accent/50 border ${theme === "dark" ? "border-white/10" : "border-black/10"} rounded-xl p-8 flex flex-col items-center transition-all shadow-xl hover:shadow-2xl`}>
+                <a
+                  href="https://leetcode.com/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={`${theme === "dark" ? "bg-[#1e293b]/80" : "bg-[#f0f0f0]/80"} backdrop-blur-xl hover:border-accent/50 border ${theme === "dark" ? "border-white/10" : "border-black/10"} rounded-xl p-8 flex flex-col items-center transition-all shadow-xl hover:shadow-2xl duration-1000 ${codingProfilesVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}
+                  style={{ transitionDelay: codingProfilesVisible ? '0ms' : '0ms' }}
+                >
                   <img src="https://upload.wikimedia.org/wikipedia/commons/1/19/LeetCode_logo_black.png" alt="LeetCode" className="w-16 h-16 mb-4" />
                   <span className="text-lg font-semibold mb-2">LeetCode</span>
                 </a>
-                <a href="https://www.geeksforgeeks.org/" target="_blank" rel="noopener noreferrer" className={`${theme === "dark" ? "bg-[#1e293b]/80" : "bg-[#f0f0f0]/80"} backdrop-blur-xl hover:border-accent/50 border ${theme === "dark" ? "border-white/10" : "border-black/10"} rounded-xl p-8 flex flex-col items-center transition-all shadow-xl hover:shadow-2xl`}>
+                <a
+                  href="https://www.geeksforgeeks.org/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={`${theme === "dark" ? "bg-[#1e293b]/80" : "bg-[#f0f0f0]/80"} backdrop-blur-xl hover:border-accent/50 border ${theme === "dark" ? "border-white/10" : "border-black/10"} rounded-xl p-8 flex flex-col items-center transition-all shadow-xl hover:shadow-2xl duration-1000 ${codingProfilesVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}
+                  style={{ transitionDelay: codingProfilesVisible ? '200ms' : '0ms' }}
+                >
                   <img src="https://upload.wikimedia.org/wikipedia/commons/4/43/GeeksforGeeks.svg" alt="GeeksforGeeks" className="w-16 h-16 mb-4" />
                   <span className="text-lg font-semibold mb-2">GeeksforGeeks</span>
                 </a>
-                <a href="https://www.hackerrank.com/" target="_blank" rel="noopener noreferrer" className={`${theme === "dark" ? "bg-[#1e293b]/80" : "bg-[#f0f0f0]/80"} backdrop-blur-xl hover:border-accent/50 border ${theme === "dark" ? "border-white/10" : "border-black/10"} rounded-xl p-8 flex flex-col items-center transition-all shadow-xl hover:shadow-2xl`}>
+                <a
+                  href="https://www.hackerrank.com/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={`${theme === "dark" ? "bg-[#1e293b]/80" : "bg-[#f0f0f0]/80"} backdrop-blur-xl hover:border-accent/50 border ${theme === "dark" ? "border-white/10" : "border-black/10"} rounded-xl p-8 flex flex-col items-center transition-all shadow-xl hover:shadow-2xl duration-1000 ${codingProfilesVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}
+                  style={{ transitionDelay: codingProfilesVisible ? '400ms' : '0ms' }}
+                >
                   <img src="https://upload.wikimedia.org/wikipedia/commons/6/65/HackerRank_logo.png" alt="HackerRank" className="w-16 h-16 mb-4" />
                   <span className="text-lg font-semibold mb-2">HackerRank</span>
                 </a>
@@ -295,7 +333,7 @@ export default function Home() {
             </div>
           </section>
 
-          <section id="github-contributions" className="py-20 px-4">
+          <section id="github-contributions" className={`py-20 px-4 transition-all duration-[1500ms] ${githubVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
             <div className="max-w-4xl mx-auto">
               <h2 className="text-4xl md:text-5xl font-bold mb-4 text-center flex items-center justify-center gap-2">
                 <Github className="w-10 h-10 text-accent" />
@@ -310,12 +348,16 @@ export default function Home() {
             </div>
           </section>
 
-          <section id="education" className="py-20 px-4">
+          <section id="education" className={`py-20 px-4 transition-all duration-[1500ms] ${educationVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
             <div className="max-w-4xl mx-auto">
               <h2 className="text-4xl md:text-5xl font-bold mb-12 text-center">Education</h2>
               <div className="space-y-6">
                 {portfolioData.education.map((edu, idx) => (
-                  <div key={idx} className={`${theme === "dark" ? "bg-[#1e293b]/80" : "bg-[#f0f0f0]/80"} backdrop-blur-xl border ${theme === "dark" ? "border-white/10" : "border-black/10"} rounded-2xl p-8 shadow-xl hover:shadow-2xl transition-all duration-300 hover:border-accent/50`}>
+                  <div
+                    key={idx}
+                    className={`${theme === "dark" ? "bg-[#1e293b]/80" : "bg-[#f0f0f0]/80"} backdrop-blur-xl border ${theme === "dark" ? "border-white/10" : "border-black/10"} rounded-2xl p-8 shadow-xl hover:shadow-2xl transition-all duration-1000 hover:border-accent/50 ${educationVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}
+                    style={{ transitionDelay: educationVisible ? `${idx * 250}ms` : '0ms' }}
+                  >
                     <div className="flex items-start gap-6">
                       {/* Icon */}
                       <div className="w-14 h-14 rounded-xl bg-accent/10 flex items-center justify-center flex-shrink-0">

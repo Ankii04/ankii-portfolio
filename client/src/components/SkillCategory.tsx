@@ -20,9 +20,9 @@ export default function SkillCategory({
 
     return (
         <div
-            className={`group relative ${visible ? "animate-in fade-in slide-in-from-bottom-4" : "opacity-0"
+            className={`group relative transition-all duration-1000 ${visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
                 }`}
-            style={{ animationDelay: visible ? `${delay}ms` : "0ms" }}
+            style={{ transitionDelay: visible ? `${delay}ms` : "0ms" }}
         >
             <div
                 className={`relative ${theme === "dark"
@@ -38,13 +38,14 @@ export default function SkillCategory({
 
                 {/* Tech Icons Grid */}
                 <div className="grid grid-cols-3 gap-6">
-                    {skills.map((skill) => {
+                    {skills.map((skill, idx) => {
                         const IconComponent = TechIcons[skill];
 
                         return (
                             <div
                                 key={skill}
-                                className="flex flex-col items-center gap-3 group/item cursor-pointer"
+                                className={`flex flex-col items-center gap-3 group/item cursor-pointer transition-all duration-700 ${visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}
+                                style={{ transitionDelay: visible ? `${delay + (idx * 100)}ms` : '0ms' }}
                             >
                                 <div
                                     className={`w-16 h-16 rounded-xl flex items-center justify-center text-2xl font-bold transition-all duration-300 group-hover/item:scale-110 group-hover/item:shadow-lg ${theme === "dark"
