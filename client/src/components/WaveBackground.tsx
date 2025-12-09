@@ -23,7 +23,7 @@ export default function WaveBackground() {
 
     const drawWaves = () => {
       // Clear canvas with light background
-      ctx.fillStyle = "#f5f5f5";
+      ctx.fillStyle = "#f2f2f2";
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
       // Draw multiple wave layers

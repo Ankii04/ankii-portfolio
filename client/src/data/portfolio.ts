@@ -29,7 +29,7 @@ export const portfolioData = {
       field: "10th Grade",
       school: "Eklavya Educational Complex – Patna, Bihar",
       duration: "Apr 20 - Feb 21",
-      percentage: "72%",
+      percentage: "74%",
     },
   ],
 
@@ -58,6 +58,7 @@ export const portfolioData = {
       highlights: "Clean architecture with virtual environment support and clear directory structure",
       github: "https://github.com/Ankii04/File-Recovery-System",
       demo: "https://file-recovery-system.vercel.app/",
+      image: "/projects/file-recovery-system.png",
     },
     {
       title: "AI Medication Reminder Chatbot",
@@ -74,6 +75,7 @@ export const portfolioData = {
       highlights: "AI-powered medication management with seamless user experience",
       github: "https://github.com/Ankii04/Ai-Medication-Reminder-Chatbot",
       demo: "",
+      image: "/projects/medication-chatbot.png",
     },
     {
       title: "Expense Sharing Website",
@@ -90,6 +92,7 @@ export const portfolioData = {
       highlights: "Responsive UI with interactive notifications and robust form validation",
       github: "https://github.com/Ankii04/Expense-Sharing-Website",
       demo: "",
+      image: "/projects/expense-sharing.png",
     },
   ],
 

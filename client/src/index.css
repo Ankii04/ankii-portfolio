@@ -53,9 +53,9 @@
   --chart-4: var(--color-blue-700);
   --chart-5: var(--color-blue-800);
   --radius: 0.65rem;
-  --background: oklch(0.95 0.015 95);
+  --background: oklch(0.96 0.002 90);
   --foreground: oklch(0.08 0 0);
-  --card: oklch(0.96 0.015 95);
+  --card: oklch(0.96 0.002 90);
   --card-foreground: oklch(0.08 0 0);
   --popover: oklch(0.96 0.015 95);
   --popover-foreground: oklch(0.08 0 0);

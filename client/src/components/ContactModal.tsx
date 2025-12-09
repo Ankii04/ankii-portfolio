@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { X, Send, Github, Linkedin, Twitter, Instagram } from 'lucide-react';
+import { X, Send, Github, Linkedin } from 'lucide-react';
 import { Button } from './ui/button';
 import ConstellationBackground from './ConstellationBackground';
 import WaveBackground from './WaveBackground';
@@ -115,12 +115,7 @@ export default function ContactModal({ isOpen, onClose, email, github, linkedin 
                                     <Linkedin className="w-5 h-5" />
                                 </a>
                             )}
-                            <a href="#" className="w-12 h-12 rounded-full bg-card/50 backdrop-blur border border-border/50 flex items-center justify-center hover:border-accent/50 transition-all">
-                                <Twitter className="w-5 h-5" />
-                            </a>
-                            <a href="#" className="w-12 h-12 rounded-full bg-card/50 backdrop-blur border border-border/50 flex items-center justify-center hover:border-accent/50 transition-all">
-                                <Instagram className="w-5 h-5" />
-                            </a>
+
                         </div>
                     </div>
 

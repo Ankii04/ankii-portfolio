@@ -11,6 +11,7 @@ interface ProjectCardProps {
     highlights: string;
     github?: string;
     demo?: string;
+    image?: string;
 }
 
 export default function ProjectCard({
@@ -21,13 +22,14 @@ export default function ProjectCard({
     highlights,
     github,
     demo,
+    image,
 }: ProjectCardProps) {
     const [isFlipped, setIsFlipped] = useState(false);
     const { theme } = useTheme();
 
     return (
         <div
-            className="relative h-[380px] w-full perspective-1000"
+            className="relative h-[450px] w-full perspective-1000"
             onMouseLeave={() => setIsFlipped(false)}
         >
             <div
@@ -49,6 +51,15 @@ export default function ProjectCard({
                             onMouseEnter={() => setIsFlipped(true)}
                             className="flex-1 cursor-pointer"
                         >
+                            {image && (
+                                <div className="-mx-6 -mt-6 mb-6 h-48 overflow-hidden">
+                                    <img
+                                        src={image}
+                                        alt={title}
+                                        className="w-full h-full object-cover transform hover:scale-105 transition-transform duration-500"
+                                    />
+                                </div>
+                            )}
                             <h3 className="text-2xl font-bold mb-3">{title}</h3>
                             <p className="text-sm text-muted-foreground mb-4 line-clamp-3">
                                 {description}

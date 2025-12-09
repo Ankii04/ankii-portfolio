@@ -129,7 +129,7 @@ export default function Home() {
                   </h3>
                 </div>
                 <p className="text-base md:text-lg text-muted-foreground font-light max-w-2xl leading-relaxed">
-                  I am a Front-End / Software Developer. I am currently looking for Internship Opportunities.
+                  I am a Full Stack / Software Developer. I am currently looking for Internship Opportunities.
                 </p>
                 <div className="flex flex-col sm:flex-row gap-4 pt-4">
                   <Button
@@ -159,7 +159,7 @@ export default function Home() {
                 </div>
               </div>
             </div>
-            <nav className={`fixed bottom-8 left-1/2 -translate-x-1/2 z-20 backdrop-blur-md border border-border/50 rounded-full px-6 py-4 flex items-center justify-center gap-6 ${theme === "dark" ? "bg-black/40" : "bg-white/40"
+            <nav className={`fixed bottom-2 left-1/2 -translate-x-1/2 z-20 backdrop-blur-md border border-border/50 rounded-full px-6 py-4 flex items-center justify-center gap-6 ${theme === "dark" ? "bg-black/40" : "bg-white/40"
               }`}>
               <button
                 onClick={() => scrollToSection("home")}
@@ -214,7 +214,7 @@ export default function Home() {
             </nav>
           </section>
 
-          <section id="skills" className="py-20 px-4">
+          <section id="skills" className="py-10 px-4">
             <div className="max-w-5xl mx-auto">
               <div className="text-center mb-16">
                 <p className="text-accent uppercase tracking-[0.3em] text-sm font-semibold mb-4">Tech Stack</p>
@@ -263,7 +263,7 @@ export default function Home() {
             </div>
           </section>
 
-          <section id="projects" className={`py-20 px-4 transition-all duration-[1500ms] ${projectsVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
+          <section id="projects" className={`py-10 px-4 transition-all duration-[1500ms] ${projectsVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
             <div className="max-w-6xl mx-auto">
               <h2 className="text-4xl md:text-5xl font-bold mb-4 text-center">Featured Projects</h2>
               <p className="text-center text-muted-foreground mb-12">
@@ -284,6 +284,7 @@ export default function Home() {
                       highlights={project.highlights}
                       github={project.github}
                       demo={project.demo}
+                      image={project.image}
                     />
                   </div>
                 ))}
@@ -299,7 +300,7 @@ export default function Home() {
               <p className="text-muted-foreground mb-8">Solving problems and building logical thinking through coding platforms.</p>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-8 justify-center">
                 <a
-                  href="https://leetcode.com/"
+                  href="https://leetcode.com/u/ankii04/"
                   target="_blank"
                   rel="noopener noreferrer"
                   className={`${theme === "dark" ? "bg-[#1e293b]/80" : "bg-[#f0f0f0]/80"} backdrop-blur-xl hover:border-accent/50 border ${theme === "dark" ? "border-white/10" : "border-black/10"} rounded-xl p-8 flex flex-col items-center transition-all shadow-xl hover:shadow-2xl duration-1000 ${codingProfilesVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}
@@ -309,7 +310,7 @@ export default function Home() {
                   <span className="text-lg font-semibold mb-2">LeetCode</span>
                 </a>
                 <a
-                  href="https://www.geeksforgeeks.org/"
+                  href="https://www.geeksforgeeks.org/profile/ankitk3hwk"
                   target="_blank"
                   rel="noopener noreferrer"
                   className={`${theme === "dark" ? "bg-[#1e293b]/80" : "bg-[#f0f0f0]/80"} backdrop-blur-xl hover:border-accent/50 border ${theme === "dark" ? "border-white/10" : "border-black/10"} rounded-xl p-8 flex flex-col items-center transition-all shadow-xl hover:shadow-2xl duration-1000 ${codingProfilesVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}
@@ -319,7 +320,7 @@ export default function Home() {
                   <span className="text-lg font-semibold mb-2">GeeksforGeeks</span>
                 </a>
                 <a
-                  href="https://www.hackerrank.com/"
+                  href="https://www.hackerrank.com/profile/ankitkr1841"
                   target="_blank"
                   rel="noopener noreferrer"
                   className={`${theme === "dark" ? "bg-[#1e293b]/80" : "bg-[#f0f0f0]/80"} backdrop-blur-xl hover:border-accent/50 border ${theme === "dark" ? "border-white/10" : "border-black/10"} rounded-xl p-8 flex flex-col items-center transition-all shadow-xl hover:shadow-2xl duration-1000 ${codingProfilesVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}
@@ -348,7 +349,7 @@ export default function Home() {
             </div>
           </section>
 
-          <section id="education" className={`py-20 px-4 transition-all duration-[1500ms] ${educationVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
+          <section id="education" className={`py-10 px-4 transition-all duration-[1500ms] ${educationVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
             <div className="max-w-4xl mx-auto">
               <h2 className="text-4xl md:text-5xl font-bold mb-12 text-center">Education</h2>
               <div className="space-y-6">
