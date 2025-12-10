@@ -24,12 +24,7 @@ import {
 import { DiJava } from 'react-icons/di';
 import { VscCode } from 'react-icons/vsc';
 
-interface IconProps {
-    className?: string;
-    style?: React.CSSProperties;
-}
-
-export const TechIcons: Record<string, React.FC<IconProps>> = {
+export const TechIcons = {
     // Frontend Frameworks
     "React.js": ({ className, style }) => (
         <SiReact className={className} style={{ color: "#61DAFB", ...style }} />

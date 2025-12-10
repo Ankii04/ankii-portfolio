@@ -5,15 +5,7 @@ import ConstellationBackground from './ConstellationBackground';
 import WaveBackground from './WaveBackground';
 import { useTheme } from '@/contexts/ThemeContext';
 
-interface ContactModalProps {
-    isOpen: boolean;
-    onClose: () => void;
-    email: string;
-    github?: string;
-    linkedin?: string;
-}
-
-export default function ContactModal({ isOpen, onClose, email, github, linkedin }: ContactModalProps) {
+export default function ContactModal({ isOpen, onClose, email, github, linkedin }) {
     const { theme } = useTheme();
     const [formData, setFormData] = useState({
         name: '',
@@ -21,7 +13,7 @@ export default function ContactModal({ isOpen, onClose, email, github, linkedin 
         message: ''
     });
     const [isSubmitting, setIsSubmitting] = useState(false);
-    const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
+    const [submitStatus, setSubmitStatus] = useState('idle');
 
     useEffect(() => {
         if (isOpen) {
@@ -36,7 +28,7 @@ export default function ContactModal({ isOpen, onClose, email, github, linkedin 
 
     if (!isOpen) return null;
 
-    const handleSubmit = async (e: React.FormEvent) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         setIsSubmitting(true);
         setSubmitStatus('idle');

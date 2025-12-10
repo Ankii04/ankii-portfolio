@@ -2,8 +2,8 @@ import Particles from "@tsparticles/react";
 import { useEffect, useRef } from "react";
 import { loadSlim } from "@tsparticles/slim";
 
-export default function LoadingConstellationBackground() {
-    const containerRef = useRef<HTMLDivElement>(null);
+export default function ConstellationBackground() {
+    const containerRef = useRef(null);
 
     useEffect(() => {
         const initParticles = async () => {
@@ -13,26 +13,26 @@ export default function LoadingConstellationBackground() {
             await loadSlim(tsParticles);
 
             await tsParticles.load({
-                id: "tsparticles-loading",
+                id: "tsparticles-background",
                 options: {
                     background: { color: "#000000" },
                     particles: {
-                        number: { value: 120, density: { enable: true } },
+                        number: { value: 60, density: { enable: true } },
                         color: { value: "#ffffff" },
                         shape: { type: "circle" },
-                        opacity: { value: 0.8 },
-                        size: { value: { min: 1, max: 2.5 } },
+                        opacity: { value: 0.7 },
+                        size: { value: { min: 0.5, max: 1.5 } },
                         links: {
                             enable: true,
-                            distance: 150,
-                            opacity: 0.5,
+                            distance: 80,
+                            opacity: 0.3,
                             color: "#ffffff",
-                            width: 1.2,
-                            triangles: { enable: true, opacity: 0.05 },
+                            width: 0.8,
+                            triangles: { enable: true, opacity: 0 },
                         },
                         move: {
                             enable: true,
-                            speed: 0.5,
+                            speed: 0.3,
                             random: true,
                             direction: "none",
                             straight: false,
@@ -55,7 +55,7 @@ export default function LoadingConstellationBackground() {
     return (
         <div
             ref={containerRef}
-            id="tsparticles-loading"
+            id="tsparticles-background"
             style={{
                 position: "fixed",
                 top: 0,

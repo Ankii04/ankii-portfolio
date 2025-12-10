@@ -3,17 +3,6 @@ import { Github, ExternalLink } from "lucide-react";
 import { useState } from "react";
 import { useTheme } from "@/contexts/ThemeContext";
 
-interface ProjectCardProps {
-    title: string;
-    description: string;
-    features: string[];
-    tech: string[];
-    highlights: string;
-    github?: string;
-    demo?: string;
-    image?: string;
-}
-
 export default function ProjectCard({
     title,
     description,
@@ -23,7 +12,7 @@ export default function ProjectCard({
     github,
     demo,
     image,
-}: ProjectCardProps) {
+}) {
     const [isFlipped, setIsFlipped] = useState(false);
     const { theme } = useTheme();
 

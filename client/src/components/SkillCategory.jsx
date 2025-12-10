@@ -1,21 +1,13 @@
 import { useTheme } from "@/contexts/ThemeContext";
 import { TechIcons } from "./TechIcons";
 
-interface SkillCategoryProps {
-    title: string;
-    icon: string;
-    skills: string[];
-    delay?: number;
-    visible?: boolean;
-}
-
 export default function SkillCategory({
     title,
     icon,
     skills,
     delay = 0,
     visible = true,
-}: SkillCategoryProps) {
+}) {
     const { theme } = useTheme();
 
     return (

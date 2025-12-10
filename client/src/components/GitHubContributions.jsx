@@ -1,16 +1,10 @@
 import { useEffect, useState } from "react";
 import { useTheme } from "@/contexts/ThemeContext";
 
-interface ContributionDay {
-    date: string;
-    count: number;
-    level: number;
-}
-
-export default function GitHubContributions({ username }: { username: string }) {
-    const [contributions, setContributions] = useState<ContributionDay[]>([]);
+export default function GitHubContributions({ username }) {
+    const [contributions, setContributions] = useState([]);
     const [loading, setLoading] = useState(true);
-    const [error, setError] = useState<string | null>(null);
+    const [error, setError] = useState(null);
     const [totalContributions, setTotalContributions] = useState(0);
     const { theme } = useTheme();
 
@@ -32,13 +26,13 @@ export default function GitHubContributions({ username }: { username: string }) 
 
             // Get current year's contributions
             const currentYear = new Date().getFullYear();
-            const yearContributions = data.contributions.filter((day: ContributionDay) => {
+            const yearContributions = data.contributions.filter((day) => {
                 const year = new Date(day.date).getFullYear();
                 return year === currentYear;
             });
 
             // Calculate total for current year
-            const total = yearContributions.reduce((sum: number, day: ContributionDay) => sum + day.count, 0);
+            const total = yearContributions.reduce((sum, day) => sum + day.count, 0);
 
             setContributions(yearContributions);
             setTotalContributions(total);
@@ -51,7 +45,7 @@ export default function GitHubContributions({ username }: { username: string }) 
         }
     };
 
-    const getContributionColor = (level: number) => {
+    const getContributionColor = (level) => {
         if (theme === "dark") {
             const colors = ["#161b22", "#0e4429", "#006d32", "#26a641", "#39d353"];
             return colors[level] || colors[0];
@@ -61,9 +55,9 @@ export default function GitHubContributions({ username }: { username: string }) 
         }
     };
 
-    const groupByWeeks = (days: ContributionDay[]) => {
-        const weeks: ContributionDay[][] = [];
-        let currentWeek: ContributionDay[] = [];
+    const groupByWeeks = (days) => {
+        const weeks = [];
+        let currentWeek = [];
 
         days.forEach((day, index) => {
             currentWeek.push(day);
