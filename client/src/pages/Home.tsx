@@ -68,7 +68,7 @@ export default function Home() {
   const [currentRole, setCurrentRole] = useState(0);
   const [displayedText, setDisplayedText] = useState("");
   const [isDeleting, setIsDeleting] = useState(false);
-  const roles = ["Software Developer", "Full Stack Developer"];
+  const roles = ["Full Stack Developer", "UI/UX Developer"];
 
   useEffect(() => {
     const currentText = roles[currentRole];
@@ -129,7 +129,7 @@ export default function Home() {
                   </h3>
                 </div>
                 <p className="text-base md:text-lg text-muted-foreground font-light max-w-2xl leading-relaxed">
-                  I am a Full Stack / Software Developer. I am currently looking for Internship Opportunities.
+                  I am a Full Stack / UI/UX Developer. I am currently looking for Internship Opportunities.
                 </p>
                 <div className="flex flex-col sm:flex-row gap-4 pt-4">
                   <Button
@@ -139,7 +139,7 @@ export default function Home() {
                   >
                     Contact Me
                   </Button>
-                  <a href="/Ankii_CV.pdf" download>
+                  <a href="/Ankii_CV.pdf" target="_blank" rel="noopener noreferrer">
                     <Button
                       size="lg"
                       variant="outline"
@@ -303,31 +303,40 @@ export default function Home() {
                   href="https://leetcode.com/u/ankii04/"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className={`${theme === "dark" ? "bg-[#1e293b]/80" : "bg-[#f0f0f0]/80"} backdrop-blur-xl hover:border-accent/50 border ${theme === "dark" ? "border-white/10" : "border-black/10"} rounded-xl p-8 flex flex-col items-center transition-all shadow-xl hover:shadow-2xl duration-1000 ${codingProfilesVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}
+                  className="relative group"
                   style={{ transitionDelay: codingProfilesVisible ? '0ms' : '0ms' }}
                 >
-                  <img src="https://upload.wikimedia.org/wikipedia/commons/1/19/LeetCode_logo_black.png" alt="LeetCode" className="w-16 h-16 mb-4" />
-                  <span className="text-lg font-semibold mb-2">LeetCode</span>
+                  <div className={`absolute -inset-[2px] bg-gradient-to-r from-green-500 via-teal-500 to-blue-500 rounded-xl opacity-0 group-hover:opacity-100 blur-sm transition-opacity duration-500`}></div>
+                  <div className={`relative ${theme === "dark" ? "bg-[#1e293b]/80" : "bg-[#f0f0f0]/80"} backdrop-blur-xl border ${theme === "dark" ? "border-white/10" : "border-black/10"} rounded-xl p-8 flex flex-col items-center transition-all shadow-xl hover:shadow-2xl duration-1000 ${codingProfilesVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/1/19/LeetCode_logo_black.png" alt="LeetCode" className="w-16 h-16 mb-4" />
+                    <span className="text-lg font-semibold mb-2">LeetCode</span>
+                  </div>
                 </a>
                 <a
                   href="https://www.geeksforgeeks.org/profile/ankitk3hwk"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className={`${theme === "dark" ? "bg-[#1e293b]/80" : "bg-[#f0f0f0]/80"} backdrop-blur-xl hover:border-accent/50 border ${theme === "dark" ? "border-white/10" : "border-black/10"} rounded-xl p-8 flex flex-col items-center transition-all shadow-xl hover:shadow-2xl duration-1000 ${codingProfilesVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}
+                  className="relative group"
                   style={{ transitionDelay: codingProfilesVisible ? '200ms' : '0ms' }}
                 >
-                  <img src="https://upload.wikimedia.org/wikipedia/commons/4/43/GeeksforGeeks.svg" alt="GeeksforGeeks" className="w-16 h-16 mb-4" />
-                  <span className="text-lg font-semibold mb-2">GeeksforGeeks</span>
+                  <div className={`absolute -inset-[2px] bg-gradient-to-r from-green-500 via-teal-500 to-blue-500 rounded-xl opacity-0 group-hover:opacity-100 blur-sm transition-opacity duration-500`}></div>
+                  <div className={`relative ${theme === "dark" ? "bg-[#1e293b]/80" : "bg-[#f0f0f0]/80"} backdrop-blur-xl border ${theme === "dark" ? "border-white/10" : "border-black/10"} rounded-xl p-8 flex flex-col items-center transition-all shadow-xl hover:shadow-2xl duration-1000 ${codingProfilesVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/4/43/GeeksforGeeks.svg" alt="GeeksforGeeks" className="w-16 h-16 mb-4" />
+                    <span className="text-lg font-semibold mb-2">GeeksforGeeks</span>
+                  </div>
                 </a>
                 <a
                   href="https://www.hackerrank.com/profile/ankitkr1841"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className={`${theme === "dark" ? "bg-[#1e293b]/80" : "bg-[#f0f0f0]/80"} backdrop-blur-xl hover:border-accent/50 border ${theme === "dark" ? "border-white/10" : "border-black/10"} rounded-xl p-8 flex flex-col items-center transition-all shadow-xl hover:shadow-2xl duration-1000 ${codingProfilesVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}
+                  className="relative group"
                   style={{ transitionDelay: codingProfilesVisible ? '400ms' : '0ms' }}
                 >
-                  <img src="https://upload.wikimedia.org/wikipedia/commons/6/65/HackerRank_logo.png" alt="HackerRank" className="w-16 h-16 mb-4" />
-                  <span className="text-lg font-semibold mb-2">HackerRank</span>
+                  <div className={`absolute -inset-[2px] bg-gradient-to-r from-green-500 via-teal-500 to-blue-500 rounded-xl opacity-0 group-hover:opacity-100 blur-sm transition-opacity duration-500`}></div>
+                  <div className={`relative ${theme === "dark" ? "bg-[#1e293b]/80" : "bg-[#f0f0f0]/80"} backdrop-blur-xl border ${theme === "dark" ? "border-white/10" : "border-black/10"} rounded-xl p-8 flex flex-col items-center transition-all shadow-xl hover:shadow-2xl duration-1000 ${codingProfilesVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/6/65/HackerRank_logo.png" alt="HackerRank" className="w-16 h-16 mb-4" />
+                    <span className="text-lg font-semibold mb-2">HackerRank</span>
+                  </div>
                 </a>
               </div>
               <p className="mt-8 text-muted-foreground">Total Problems Solved: <span className="text-accent font-bold">200+</span> across all platforms</p>
@@ -343,8 +352,11 @@ export default function Home() {
               <p className="text-center text-muted-foreground mb-8">
                 My coding activity and contributions this year
               </p>
-              <div className={`${theme === "dark" ? "bg-[#1e293b]" : "bg-[#FAF9F6]"} backdrop-blur border border-border/50 rounded-xl p-6`}>
-                <GitHubContributions username={portfolioData.github} />
+              <div className="relative group">
+                <div className={`absolute -inset-[2px] bg-gradient-to-r from-green-400 via-blue-500 to-purple-600 rounded-xl opacity-0 group-hover:opacity-100 blur-sm transition-opacity duration-500`}></div>
+                <div className={`relative ${theme === "dark" ? "bg-[#1e293b]" : "bg-[#FAF9F6]"} backdrop-blur border border-border/50 rounded-xl p-6`}>
+                  <GitHubContributions username={portfolioData.github} />
+                </div>
               </div>
             </div>
           </section>
@@ -356,29 +368,32 @@ export default function Home() {
                 {portfolioData.education.map((edu, idx) => (
                   <div
                     key={idx}
-                    className={`${theme === "dark" ? "bg-[#1e293b]/80" : "bg-[#f0f0f0]/80"} backdrop-blur-xl border ${theme === "dark" ? "border-white/10" : "border-black/10"} rounded-2xl p-8 shadow-xl hover:shadow-2xl transition-all duration-1000 hover:border-accent/50 ${educationVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}
+                    className={`relative group transition-all duration-1000 ${educationVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}
                     style={{ transitionDelay: educationVisible ? `${idx * 250}ms` : '0ms' }}
                   >
-                    <div className="flex items-start gap-6">
-                      {/* Icon */}
-                      <div className="w-14 h-14 rounded-xl bg-accent/10 flex items-center justify-center flex-shrink-0">
-                        <Code className="w-7 h-7 text-accent" />
-                      </div>
+                    <div className={`absolute -inset-[2px] rounded-2xl opacity-0 group-hover:opacity-100 blur-sm transition-opacity duration-500 ${theme === "dark" ? "bg-gradient-to-r from-slate-700 via-slate-600 to-slate-700" : "bg-gradient-to-r from-gray-300 via-gray-200 to-gray-300"}`}></div>
+                    <div className={`relative ${theme === "dark" ? "bg-[#1e293b]/80" : "bg-[#f0f0f0]/80"} backdrop-blur-xl border ${theme === "dark" ? "border-white/10" : "border-black/10"} rounded-2xl p-8 shadow-xl hover:shadow-2xl transition-all duration-1000`}>
+                      <div className="flex items-start gap-6">
+                        {/* Icon */}
+                        <div className="w-14 h-14 rounded-xl bg-accent/10 flex items-center justify-center flex-shrink-0">
+                          <Code className="w-7 h-7 text-accent" />
+                        </div>
 
-                      {/* Content */}
-                      <div className="flex-1">
-                        <h3 className="text-2xl md:text-3xl font-bold mb-2">{edu.degree}</h3>
-                        <p className="text-lg italic text-muted-foreground mb-1">{edu.field}</p>
-                        <p className="text-base italic text-muted-foreground/80 mb-6">{edu.school}</p>
+                        {/* Content */}
+                        <div className="flex-1">
+                          <h3 className="text-2xl md:text-3xl font-bold mb-2">{edu.degree}</h3>
+                          <p className="text-lg italic text-muted-foreground mb-1">{edu.field}</p>
+                          <p className="text-base italic text-muted-foreground/80 mb-6">{edu.school}</p>
 
-                        {/* Bottom Row: Date and CGPA */}
-                        <div className="flex items-center justify-between">
-                          <p className="text-sm italic text-muted-foreground">{edu.duration}</p>
-                          <div className={`flex items-center gap-2 ${theme === "dark" ? "bg-accent/10" : "bg-accent/5"} border border-accent/30 rounded-lg px-4 py-2`}>
-                            <span className="text-yellow-500">⭐</span>
-                            <span className="text-lg font-bold">
-                              {edu.cgpa || edu.percentage}
-                            </span>
+                          {/* Bottom Row: Date and CGPA */}
+                          <div className="flex items-center justify-between">
+                            <p className="text-sm italic text-muted-foreground">{edu.duration}</p>
+                            <div className={`flex items-center gap-2 ${theme === "dark" ? "bg-accent/10" : "bg-accent/5"} border border-accent/30 rounded-lg px-4 py-2`}>
+                              <span className="text-yellow-500">⭐</span>
+                              <span className="text-lg font-bold">
+                                {edu.cgpa || edu.percentage}
+                              </span>
+                            </div>
                           </div>
                         </div>
                       </div>
@@ -393,14 +408,13 @@ export default function Home() {
             <div className="max-w-4xl mx-auto text-center">
               <p className="text-muted-foreground uppercase tracking-widest mb-4">Have a project in mind?</p>
               <h2 className="text-5xl md:text-6xl font-bold mb-8">Let's Talk</h2>
-              <a href={`mailto:${portfolioData.email}`}>
-                <Button
-                  size="lg"
-                  className="bg-accent hover:bg-accent/90 text-accent-foreground px-8 py-3 rounded-full font-semibold mb-12"
-                >
-                  Contact Me
-                </Button>
-              </a>
+              <Button
+                size="lg"
+                onClick={() => setIsContactModalOpen(true)}
+                className="bg-accent hover:bg-accent/90 text-accent-foreground px-8 py-3 rounded-full font-semibold mb-12"
+              >
+                Contact Me
+              </Button>
               <div className="flex justify-center gap-6 mb-12">
                 <a
                   href={`mailto:${portfolioData.email}`}
