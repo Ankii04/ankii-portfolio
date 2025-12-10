@@ -129,8 +129,7 @@ export default function Home() {
                   </h3>
                 </div>
                 <p className="text-base md:text-lg text-muted-foreground font-light max-w-2xl leading-relaxed">
-                  I am a Full Stack / UI/UX Developer. I am currently looking for Internship Opportunities.
-                </p>
+                  I am a Full Stack and UI/UX Developer actively seeking new opportunities to build impactful digital experiences.                </p>
                 <div className="flex flex-col sm:flex-row gap-4 pt-4">
                   <Button
                     size="lg"
