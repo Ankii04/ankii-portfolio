@@ -106,7 +106,7 @@ export default function Home() {
         let animationId;
         let isPaused = false;
         let userScrollTimeout;
-        let scrollSpeed = 0.3; // Slower speed - pixels per frame
+        let scrollSpeed = 1.5; // Faster, more visible speed - pixels per frame
         let isAutoScrolling = false; // Track if we're auto-scrolling
 
         const smoothScroll = () => {
@@ -114,7 +114,7 @@ export default function Home() {
                 const maxScroll = carousel.scrollWidth - carousel.clientWidth;
 
                 // If we're at the end, smoothly loop back to start
-                if (carousel.scrollLeft >= maxScroll - 1) {
+                if (carousel.scrollLeft >= maxScroll - 5) {
                     isAutoScrolling = true;
                     carousel.scrollLeft = 0;
                     setTimeout(() => { isAutoScrolling = false; }, 100);
