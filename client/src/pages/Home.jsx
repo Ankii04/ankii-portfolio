@@ -109,24 +109,23 @@ export default function Home() {
         const startAutoScroll = () => {
             scrollInterval = setInterval(() => {
                 if (!isPaused && carousel) {
-                    const cardWidth = carousel.querySelector('.project-card-wrapper')?.offsetWidth || 0;
                     const maxScroll = carousel.scrollWidth - carousel.clientWidth;
 
                     // If we're at the end, scroll back to start
-                    if (carousel.scrollLeft >= maxScroll - 10) {
+                    if (carousel.scrollLeft >= maxScroll - 5) {
                         carousel.scrollTo({
                             left: 0,
                             behavior: 'smooth'
                         });
                     } else {
-                        // Scroll to next card
+                        // Smooth continuous scroll (small increments)
                         carousel.scrollBy({
-                            left: cardWidth + 24, // card width + gap
-                            behavior: 'smooth'
+                            left: 2, // Small increment for smooth continuous movement
+                            behavior: 'auto' // Use 'auto' for smoother continuous scroll
                         });
                     }
                 }
-            }, 3000); // Auto-scroll every 3 seconds
+            }, 30); // Faster interval for smoother animation
         };
 
         // Pause on hover
@@ -315,92 +314,44 @@ export default function Home() {
                     </section>
 
                     <section id="projects" className={`py-10 px-4 transition-all duration-[1500ms] ${projectsVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
-                        <div className="max-w-7xl mx-auto">
+                        <div className="max-w-6xl mx-auto">
                             <h2 className="text-4xl md:text-5xl font-bold mb-4 text-center">Featured Projects</h2>
                             <p className="text-center text-muted-foreground mb-12">
-                                Auto-scrolling gallery • Hover to pause • Use arrows to navigate
+                                Auto-scrolling 3D gallery • Hover to pause
                             </p>
-                            <div className="relative group">
-                                {/* Left Arrow */}
-                                <button
-                                    onClick={() => {
-                                        const container = document.querySelector('#projects-carousel');
-                                        const cardWidth = container.querySelector('.project-card-wrapper').offsetWidth;
-                                        container.scrollBy({
-                                            left: -(cardWidth + 24),
-                                            behavior: 'smooth'
-                                        });
-                                    }}
-                                    className={`absolute left-0 top-1/2 -translate-y-1/2 z-10 w-12 h-12 rounded-full ${theme === "dark" ? "bg-[#1e293b]/90" : "bg-white/90"} backdrop-blur border border-border/50 flex items-center justify-center opacity-0 group-hover:opacity-100 hover:border-accent/50 transition-all duration-300 shadow-lg`}
-                                    aria-label="Previous project"
-                                >
-                                    <svg className="w-6 h-6 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-                                    </svg>
-                                </button>
-
-                                {/* Right Arrow */}
-                                <button
-                                    onClick={() => {
-                                        const container = document.querySelector('#projects-carousel');
-                                        const cardWidth = container.querySelector('.project-card-wrapper').offsetWidth;
-                                        container.scrollBy({
-                                            left: cardWidth + 24,
-                                            behavior: 'smooth'
-                                        });
-                                    }}
-                                    className={`absolute right-0 top-1/2 -translate-y-1/2 z-10 w-12 h-12 rounded-full ${theme === "dark" ? "bg-[#1e293b]/90" : "bg-white/90"} backdrop-blur border border-border/50 flex items-center justify-center opacity-0 group-hover:opacity-100 hover:border-accent/50 transition-all duration-300 shadow-lg`}
-                                    aria-label="Next project"
-                                >
-                                    <svg className="w-6 h-6 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                                    </svg>
-                                </button>
-
-                                {/* Carousel Container */}
+                            <div className="relative perspective-carousel">
+                                {/* 3D Carousel Container */}
                                 <div
                                     id="projects-carousel"
-                                    className="flex gap-6 overflow-x-auto pb-6 snap-x snap-mandatory scroll-smooth scrollbar-thin scrollbar-thumb-accent/50 scrollbar-track-transparent hover:scrollbar-thumb-accent/70 auto-scroll-carousel"
+                                    className="flex gap-8 overflow-x-auto pb-6 snap-x snap-mandatory scroll-smooth hide-scrollbar"
                                     style={{
-                                        scrollbarWidth: 'thin',
-                                        scrollbarColor: 'rgba(var(--accent), 0.5) transparent'
+                                        scrollbarWidth: 'none',
+                                        msOverflowStyle: 'none'
                                     }}
                                 >
                                     {portfolioData.projects.map((project, idx) => (
                                         <div
                                             key={idx}
-                                            className={`project-card-wrapper flex-shrink-0 w-[90vw] sm:w-[450px] md:w-[500px] snap-center transition-all duration-1000 ${projectsVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}
-                                            style={{ transitionDelay: projectsVisible ? `${idx * 150}ms` : '0ms' }}
-                                        >
-                                            <ProjectCard
-                                                title={project.title}
-                                                description={project.description}
-                                                features={project.features}
-                                                tech={project.tech}
-                                                highlights={project.highlights}
-                                                github={project.github}
-                                                demo={project.demo}
-                                                image={project.image}
-                                            />
-                                        </div>
-                                    ))}
-                                </div>
-
-                                {/* Scroll Indicator */}
-                                <div className="flex justify-center gap-2 mt-6">
-                                    {portfolioData.projects.map((_, idx) => (
-                                        <div
-                                            key={idx}
-                                            className="w-2 h-2 rounded-full bg-accent/30 hover:bg-accent/60 transition-all cursor-pointer"
-                                            onClick={() => {
-                                                const container = document.querySelector('#projects-carousel');
-                                                const cardWidth = container.querySelector('.project-card-wrapper').offsetWidth;
-                                                container.scrollTo({
-                                                    left: idx * (cardWidth + 24), // 24px is the gap
-                                                    behavior: 'smooth'
-                                                });
+                                            className={`project-card-wrapper flex-shrink-0 w-[85vw] sm:w-[380px] md:w-[420px] snap-center transition-all duration-1000 ${projectsVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}
+                                            style={{
+                                                transitionDelay: projectsVisible ? `${idx * 150}ms` : '0ms',
+                                                transform: 'perspective(1000px) rotateY(-5deg)',
+                                                transformStyle: 'preserve-3d'
                                             }}
-                                        />
+                                        >
+                                            <div className="carousel-card-3d">
+                                                <ProjectCard
+                                                    title={project.title}
+                                                    description={project.description}
+                                                    features={project.features}
+                                                    tech={project.tech}
+                                                    highlights={project.highlights}
+                                                    github={project.github}
+                                                    demo={project.demo}
+                                                    image={project.image}
+                                                />
+                                            </div>
+                                        </div>
                                     ))}
                                 </div>
                             </div>
