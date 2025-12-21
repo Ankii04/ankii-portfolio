@@ -319,11 +319,11 @@ export default function Home() {
                             <p className="text-center text-muted-foreground mb-12">
                                 Auto-scrolling 3D gallery • Hover to pause
                             </p>
-                            <div className="relative perspective-carousel">
+                            <div className="relative perspective-carousel overflow-hidden">
                                 {/* 3D Carousel Container */}
                                 <div
                                     id="projects-carousel"
-                                    className="flex gap-8 overflow-x-auto pb-6 snap-x snap-mandatory scroll-smooth hide-scrollbar"
+                                    className="flex gap-6 overflow-x-auto pb-6 snap-x snap-mandatory scroll-smooth hide-scrollbar"
                                     style={{
                                         scrollbarWidth: 'none',
                                         msOverflowStyle: 'none'
@@ -332,10 +332,10 @@ export default function Home() {
                                     {portfolioData.projects.map((project, idx) => (
                                         <div
                                             key={idx}
-                                            className={`project-card-wrapper flex-shrink-0 w-[85vw] sm:w-[380px] md:w-[420px] snap-center transition-all duration-1000 ${projectsVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}
+                                            className={`project-card-wrapper flex-shrink-0 w-[75vw] sm:w-[320px] md:w-[350px] snap-center transition-all duration-1000 ${projectsVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}
                                             style={{
                                                 transitionDelay: projectsVisible ? `${idx * 150}ms` : '0ms',
-                                                transform: 'perspective(1000px) rotateY(-5deg)',
+                                                transform: 'perspective(1000px) rotateY(-3deg)',
                                                 transformStyle: 'preserve-3d'
                                             }}
                                         >

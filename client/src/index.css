@@ -254,17 +254,17 @@
 
   /* 3D Perspective Carousel */
   .perspective-carousel {
-    perspective: 2000px;
+    perspective: 1500px;
     perspective-origin: center;
   }
 
   .carousel-card-3d {
-    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     transform-style: preserve-3d;
   }
 
   .project-card-wrapper:hover .carousel-card-3d {
-    transform: scale(1.05) translateZ(20px);
+    transform: scale(1.03) translateZ(15px);
   }
 
   .project-card-wrapper:hover {
@@ -273,7 +273,7 @@
 
   /* Glassmorphism effect for cards */
   .carousel-card-3d>* {
-    backdrop-filter: blur(10px);
-    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2);
+    backdrop-filter: blur(8px);
+    box-shadow: 0 4px 20px 0 rgba(0, 0, 0, 0.15);
   }
 }
