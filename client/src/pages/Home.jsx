@@ -263,30 +263,57 @@ export default function Home() {
                     </section>
 
                     <section id="projects" className={`py-10 px-4 transition-all duration-[1500ms] ${projectsVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
-                        <div className="max-w-6xl mx-auto">
+                        <div className="max-w-7xl mx-auto">
                             <h2 className="text-4xl md:text-5xl font-bold mb-4 text-center">Featured Projects</h2>
                             <p className="text-center text-muted-foreground mb-12">
-                                Hover over cards to see details • Showcasing innovative solutions built with cutting-edge technologies
+                                Scroll horizontally to explore • Showcasing innovative solutions built with cutting-edge technologies
                             </p>
-                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                                {portfolioData.projects.map((project, idx) => (
-                                    <div
-                                        key={idx}
-                                        className={`transition-all duration-1000 ${projectsVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}
-                                        style={{ transitionDelay: projectsVisible ? `${idx * 200}ms` : '0ms' }}
-                                    >
-                                        <ProjectCard
-                                            title={project.title}
-                                            description={project.description}
-                                            features={project.features}
-                                            tech={project.tech}
-                                            highlights={project.highlights}
-                                            github={project.github}
-                                            demo={project.demo}
-                                            image={project.image}
+                            <div className="relative">
+                                {/* Horizontal Scroll Container */}
+                                <div
+                                    className="flex gap-6 overflow-x-auto pb-6 snap-x snap-mandatory scroll-smooth scrollbar-thin scrollbar-thumb-accent/50 scrollbar-track-transparent hover:scrollbar-thumb-accent/70"
+                                    style={{
+                                        scrollbarWidth: 'thin',
+                                        scrollbarColor: 'rgba(var(--accent), 0.5) transparent'
+                                    }}
+                                >
+                                    {portfolioData.projects.map((project, idx) => (
+                                        <div
+                                            key={idx}
+                                            className={`flex-shrink-0 w-[90vw] sm:w-[450px] md:w-[500px] snap-center transition-all duration-1000 ${projectsVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}
+                                            style={{ transitionDelay: projectsVisible ? `${idx * 150}ms` : '0ms' }}
+                                        >
+                                            <ProjectCard
+                                                title={project.title}
+                                                description={project.description}
+                                                features={project.features}
+                                                tech={project.tech}
+                                                highlights={project.highlights}
+                                                github={project.github}
+                                                demo={project.demo}
+                                                image={project.image}
+                                            />
+                                        </div>
+                                    ))}
+                                </div>
+
+                                {/* Scroll Indicator */}
+                                <div className="flex justify-center gap-2 mt-6">
+                                    {portfolioData.projects.map((_, idx) => (
+                                        <div
+                                            key={idx}
+                                            className="w-2 h-2 rounded-full bg-accent/30 hover:bg-accent/60 transition-all cursor-pointer"
+                                            onClick={() => {
+                                                const container = document.querySelector('#projects .overflow-x-auto');
+                                                const cardWidth = container.querySelector('div').offsetWidth;
+                                                container.scrollTo({
+                                                    left: idx * (cardWidth + 24), // 24px is the gap
+                                                    behavior: 'smooth'
+                                                });
+                                            }}
                                         />
-                                    </div>
-                                ))}
+                                    ))}
+                                </div>
                             </div>
                         </div>
                     </section>
