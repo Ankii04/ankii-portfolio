@@ -44,6 +44,42 @@ export const portfolioData = {
 
     projects: [
         {
+            title: "Cookiify - Recipe Sharing Platform",
+            description:
+                "A vibrant, full-stack recipe-sharing platform designed for home chefs to discover, share, and rate culinary creations from around the world. Features a vast library of recipes with advanced search and filtering capabilities.",
+            features: [
+                "Access to thousands of recipes from diverse global cuisines",
+                "Dynamic search and filtering by category, cuisine, and dietary preferences",
+                "User authentication system for sharing personal recipes",
+                "Community engagement with recipe ratings and reviews",
+                "Modern responsive UI with dark mode support",
+                "Detailed recipe pages with cooking time, servings, and ingredients",
+            ],
+            tech: ["React", "Node.js", "Express.js", "MongoDB", "Tailwind CSS", "Vercel"],
+            highlights: "Full-stack MERN application with seamless user experience and modern design aesthetics",
+            github: "https://github.com/Ankii04/cookiify",
+            demo: "https://cookiify.vercel.app/",
+            image: "/projects/cookiify.png",
+        },
+        {
+            title: "Code2Placement - DSA Learning Platform",
+            description:
+                "A comprehensive preparation platform for mastering Data Structures & Algorithms and acing technical job placements. Features 500+ curated coding problems, company-specific mock tests, and daily challenges.",
+            features: [
+                "DSA Hub with comprehensive coverage of all major data structures and algorithms",
+                "500+ curated coding problems with detailed solutions and test cases",
+                "Interview Kit with Technical and HR questions for top companies",
+                "Daily coding challenges to maintain consistency",
+                "Company-specific mock tests in simulated environments",
+                "Community forum for peer-to-peer networking and experience sharing",
+            ],
+            tech: ["React", "Vite", "Node.js", "Express.js", "MongoDB", "Tailwind CSS", "Vercel"],
+            highlights: "Complete placement preparation ecosystem with interactive coding environment and comprehensive resources",
+            github: "https://github.com/Ankii04/code2-placement",
+            demo: "https://code2-placement-uvrp.vercel.app/",
+            image: "/projects/code2-placement.png",
+        },
+        {
             title: "File Recovery System",
             description:
                 "A web-based file management system built using Flask that allows users to upload and manage files efficiently with a distributed file system for storage.",
@@ -113,7 +149,7 @@ export const portfolioData = {
     stats: {
         technologies: 12,
         yearsExperience: 1,
-        projectsBuilt: 5,
+        projectsBuilt: 7,
         coffeeConsumed: "∞",
     },
 };
