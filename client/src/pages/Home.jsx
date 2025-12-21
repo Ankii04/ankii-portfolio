@@ -98,7 +98,7 @@ export default function Home() {
         return () => clearTimeout(timeout);
     }, [displayedText, isDeleting, currentRole]);
 
-    // Auto-scroll carousel effect
+    // Auto-scroll carousel effect - Infinite Ticker Style
     useEffect(() => {
         const carousel = document.querySelector('#projects-carousel');
         if (!carousel) return;
@@ -106,23 +106,19 @@ export default function Home() {
         let animationId;
         let isPaused = false;
         let userScrollTimeout;
-        let scrollSpeed = 1.5; // Faster, more visible speed - pixels per frame
-        let isAutoScrolling = false; // Track if we're auto-scrolling
+        let scrollSpeed = 1.0; // Moderate speed - pixels per frame
 
         const smoothScroll = () => {
             if (!isPaused && carousel) {
-                const maxScroll = carousel.scrollWidth - carousel.clientWidth;
+                // For a seamless ticker, we reset position mid-way through the doubled content
+                // We'll calculate the midpoint later in the component or use scrollWidth / 2
+                const halfWay = carousel.scrollWidth / 2;
 
-                // If we're at the end, smoothly loop back to start
-                if (carousel.scrollLeft >= maxScroll - 5) {
-                    isAutoScrolling = true;
+                if (carousel.scrollLeft >= halfWay) {
+                    // Seamless reset to 0
                     carousel.scrollLeft = 0;
-                    setTimeout(() => { isAutoScrolling = false; }, 100);
                 } else {
-                    // Smooth continuous scroll
-                    isAutoScrolling = true;
                     carousel.scrollLeft += scrollSpeed;
-                    setTimeout(() => { isAutoScrolling = false; }, 50);
                 }
             }
             animationId = requestAnimationFrame(smoothScroll);
@@ -137,21 +133,19 @@ export default function Home() {
             isPaused = false;
         };
 
-        // Pause on user scroll (not auto-scroll), resume after 3 seconds
-        const handleUserScroll = () => {
-            // Only pause if this is a manual scroll, not auto-scroll
-            if (!isAutoScrolling) {
-                isPaused = true;
-                clearTimeout(userScrollTimeout);
-                userScrollTimeout = setTimeout(() => {
-                    isPaused = false;
-                }, 3000); // Resume after 3 seconds of no scrolling
-            }
+        // Pause on manual interaction
+        const handleManualInteraction = () => {
+            isPaused = true;
+            clearTimeout(userScrollTimeout);
+            userScrollTimeout = setTimeout(() => {
+                isPaused = false;
+            }, 2000);
         };
 
         carousel.addEventListener('mouseenter', handleMouseEnter);
         carousel.addEventListener('mouseleave', handleMouseLeave);
-        carousel.addEventListener('scroll', handleUserScroll, { passive: true });
+        carousel.addEventListener('mousedown', handleManualInteraction);
+        carousel.addEventListener('touchstart', handleManualInteraction, { passive: true });
 
         animationId = requestAnimationFrame(smoothScroll);
 
@@ -160,7 +154,8 @@ export default function Home() {
             clearTimeout(userScrollTimeout);
             carousel.removeEventListener('mouseenter', handleMouseEnter);
             carousel.removeEventListener('mouseleave', handleMouseLeave);
-            carousel.removeEventListener('scroll', handleUserScroll);
+            carousel.removeEventListener('mousedown', handleManualInteraction);
+            carousel.removeEventListener('touchstart', handleManualInteraction);
         };
     }, [projectsVisible]);
 
@@ -338,18 +333,18 @@ export default function Home() {
                                 {/* 3D Carousel Container */}
                                 <div
                                     id="projects-carousel"
-                                    className="flex gap-6 overflow-x-auto pb-6 snap-x snap-mandatory scroll-smooth hide-scrollbar"
+                                    className="flex gap-6 overflow-x-auto pb-6 hide-scrollbar pointer-events-auto"
                                     style={{
                                         scrollbarWidth: 'none',
                                         msOverflowStyle: 'none'
                                     }}
                                 >
-                                    {portfolioData.projects.map((project, idx) => (
+                                    {[...portfolioData.projects, ...portfolioData.projects].map((project, idx) => (
                                         <div
                                             key={idx}
-                                            className={`project-card-wrapper flex-shrink-0 w-[75vw] sm:w-[320px] md:w-[350px] snap-center transition-all duration-1000 ${projectsVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}
+                                            className={`project-card-wrapper flex-shrink-0 w-[75vw] sm:w-[320px] md:w-[350px] transition-all duration-1000 ${projectsVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}
                                             style={{
-                                                transitionDelay: projectsVisible ? `${idx * 150}ms` : '0ms'
+                                                transitionDelay: projectsVisible ? `${(idx % portfolioData.projects.length) * 150}ms` : '0ms'
                                             }}
                                         >
                                             <ProjectCard
