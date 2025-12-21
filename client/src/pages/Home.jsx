@@ -98,6 +98,58 @@ export default function Home() {
         return () => clearTimeout(timeout);
     }, [displayedText, isDeleting, currentRole]);
 
+    // Auto-scroll carousel effect
+    useEffect(() => {
+        const carousel = document.querySelector('#projects-carousel');
+        if (!carousel) return;
+
+        let scrollInterval;
+        let isPaused = false;
+
+        const startAutoScroll = () => {
+            scrollInterval = setInterval(() => {
+                if (!isPaused && carousel) {
+                    const cardWidth = carousel.querySelector('.project-card-wrapper')?.offsetWidth || 0;
+                    const maxScroll = carousel.scrollWidth - carousel.clientWidth;
+
+                    // If we're at the end, scroll back to start
+                    if (carousel.scrollLeft >= maxScroll - 10) {
+                        carousel.scrollTo({
+                            left: 0,
+                            behavior: 'smooth'
+                        });
+                    } else {
+                        // Scroll to next card
+                        carousel.scrollBy({
+                            left: cardWidth + 24, // card width + gap
+                            behavior: 'smooth'
+                        });
+                    }
+                }
+            }, 3000); // Auto-scroll every 3 seconds
+        };
+
+        // Pause on hover
+        const handleMouseEnter = () => {
+            isPaused = true;
+        };
+
+        const handleMouseLeave = () => {
+            isPaused = false;
+        };
+
+        carousel.addEventListener('mouseenter', handleMouseEnter);
+        carousel.addEventListener('mouseleave', handleMouseLeave);
+
+        startAutoScroll();
+
+        return () => {
+            clearInterval(scrollInterval);
+            carousel.removeEventListener('mouseenter', handleMouseEnter);
+            carousel.removeEventListener('mouseleave', handleMouseLeave);
+        };
+    }, [projectsVisible]);
+
     return (
         <>
             {theme === "dark" ? <ConstellationBackground /> : <WaveBackground />}
@@ -266,12 +318,49 @@ export default function Home() {
                         <div className="max-w-7xl mx-auto">
                             <h2 className="text-4xl md:text-5xl font-bold mb-4 text-center">Featured Projects</h2>
                             <p className="text-center text-muted-foreground mb-12">
-                                Scroll horizontally to explore • Showcasing innovative solutions built with cutting-edge technologies
+                                Auto-scrolling gallery • Hover to pause • Use arrows to navigate
                             </p>
-                            <div className="relative">
-                                {/* Horizontal Scroll Container */}
+                            <div className="relative group">
+                                {/* Left Arrow */}
+                                <button
+                                    onClick={() => {
+                                        const container = document.querySelector('#projects-carousel');
+                                        const cardWidth = container.querySelector('.project-card-wrapper').offsetWidth;
+                                        container.scrollBy({
+                                            left: -(cardWidth + 24),
+                                            behavior: 'smooth'
+                                        });
+                                    }}
+                                    className={`absolute left-0 top-1/2 -translate-y-1/2 z-10 w-12 h-12 rounded-full ${theme === "dark" ? "bg-[#1e293b]/90" : "bg-white/90"} backdrop-blur border border-border/50 flex items-center justify-center opacity-0 group-hover:opacity-100 hover:border-accent/50 transition-all duration-300 shadow-lg`}
+                                    aria-label="Previous project"
+                                >
+                                    <svg className="w-6 h-6 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                                    </svg>
+                                </button>
+
+                                {/* Right Arrow */}
+                                <button
+                                    onClick={() => {
+                                        const container = document.querySelector('#projects-carousel');
+                                        const cardWidth = container.querySelector('.project-card-wrapper').offsetWidth;
+                                        container.scrollBy({
+                                            left: cardWidth + 24,
+                                            behavior: 'smooth'
+                                        });
+                                    }}
+                                    className={`absolute right-0 top-1/2 -translate-y-1/2 z-10 w-12 h-12 rounded-full ${theme === "dark" ? "bg-[#1e293b]/90" : "bg-white/90"} backdrop-blur border border-border/50 flex items-center justify-center opacity-0 group-hover:opacity-100 hover:border-accent/50 transition-all duration-300 shadow-lg`}
+                                    aria-label="Next project"
+                                >
+                                    <svg className="w-6 h-6 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                                    </svg>
+                                </button>
+
+                                {/* Carousel Container */}
                                 <div
-                                    className="flex gap-6 overflow-x-auto pb-6 snap-x snap-mandatory scroll-smooth scrollbar-thin scrollbar-thumb-accent/50 scrollbar-track-transparent hover:scrollbar-thumb-accent/70"
+                                    id="projects-carousel"
+                                    className="flex gap-6 overflow-x-auto pb-6 snap-x snap-mandatory scroll-smooth scrollbar-thin scrollbar-thumb-accent/50 scrollbar-track-transparent hover:scrollbar-thumb-accent/70 auto-scroll-carousel"
                                     style={{
                                         scrollbarWidth: 'thin',
                                         scrollbarColor: 'rgba(var(--accent), 0.5) transparent'
@@ -280,7 +369,7 @@ export default function Home() {
                                     {portfolioData.projects.map((project, idx) => (
                                         <div
                                             key={idx}
-                                            className={`flex-shrink-0 w-[90vw] sm:w-[450px] md:w-[500px] snap-center transition-all duration-1000 ${projectsVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}
+                                            className={`project-card-wrapper flex-shrink-0 w-[90vw] sm:w-[450px] md:w-[500px] snap-center transition-all duration-1000 ${projectsVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}
                                             style={{ transitionDelay: projectsVisible ? `${idx * 150}ms` : '0ms' }}
                                         >
                                             <ProjectCard
@@ -304,8 +393,8 @@ export default function Home() {
                                             key={idx}
                                             className="w-2 h-2 rounded-full bg-accent/30 hover:bg-accent/60 transition-all cursor-pointer"
                                             onClick={() => {
-                                                const container = document.querySelector('#projects .overflow-x-auto');
-                                                const cardWidth = container.querySelector('div').offsetWidth;
+                                                const container = document.querySelector('#projects-carousel');
+                                                const cardWidth = container.querySelector('.project-card-wrapper').offsetWidth;
                                                 container.scrollTo({
                                                     left: idx * (cardWidth + 24), // 24px is the gap
                                                     behavior: 'smooth'
