@@ -107,6 +107,7 @@ export default function Home() {
         let isPaused = false;
         let userScrollTimeout;
         let scrollSpeed = 0.3; // Slower speed - pixels per frame
+        let isAutoScrolling = false; // Track if we're auto-scrolling
 
         const smoothScroll = () => {
             if (!isPaused && carousel) {
@@ -114,10 +115,14 @@ export default function Home() {
 
                 // If we're at the end, smoothly loop back to start
                 if (carousel.scrollLeft >= maxScroll - 1) {
+                    isAutoScrolling = true;
                     carousel.scrollLeft = 0;
+                    setTimeout(() => { isAutoScrolling = false; }, 100);
                 } else {
                     // Smooth continuous scroll
+                    isAutoScrolling = true;
                     carousel.scrollLeft += scrollSpeed;
+                    setTimeout(() => { isAutoScrolling = false; }, 50);
                 }
             }
             animationId = requestAnimationFrame(smoothScroll);
@@ -132,13 +137,16 @@ export default function Home() {
             isPaused = false;
         };
 
-        // Pause on user scroll, resume after 3 seconds
+        // Pause on user scroll (not auto-scroll), resume after 3 seconds
         const handleUserScroll = () => {
-            isPaused = true;
-            clearTimeout(userScrollTimeout);
-            userScrollTimeout = setTimeout(() => {
-                isPaused = false;
-            }, 3000); // Resume after 3 seconds of no scrolling
+            // Only pause if this is a manual scroll, not auto-scroll
+            if (!isAutoScrolling) {
+                isPaused = true;
+                clearTimeout(userScrollTimeout);
+                userScrollTimeout = setTimeout(() => {
+                    isPaused = false;
+                }, 3000); // Resume after 3 seconds of no scrolling
+            }
         };
 
         carousel.addEventListener('mouseenter', handleMouseEnter);
