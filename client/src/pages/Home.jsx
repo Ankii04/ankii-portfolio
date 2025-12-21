@@ -105,7 +105,7 @@ export default function Home() {
 
         let animationId;
         let isPaused = false;
-        let scrollSpeed = 0.5; // Pixels per frame
+        let scrollSpeed = 0.3; // Slower speed - pixels per frame
 
         const smoothScroll = () => {
             if (!isPaused && carousel) {
@@ -311,9 +311,9 @@ export default function Home() {
                         <div className="max-w-6xl mx-auto">
                             <h2 className="text-4xl md:text-5xl font-bold mb-4 text-center">Featured Projects</h2>
                             <p className="text-center text-muted-foreground mb-12">
-                                Auto-scrolling 3D gallery • Hover to pause
+                                Auto-scrolling gallery • Hover to pause
                             </p>
-                            <div className="relative perspective-carousel overflow-hidden">
+                            <div className="relative overflow-hidden">
                                 {/* 3D Carousel Container */}
                                 <div
                                     id="projects-carousel"
@@ -328,23 +328,19 @@ export default function Home() {
                                             key={idx}
                                             className={`project-card-wrapper flex-shrink-0 w-[75vw] sm:w-[320px] md:w-[350px] snap-center transition-all duration-1000 ${projectsVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}
                                             style={{
-                                                transitionDelay: projectsVisible ? `${idx * 150}ms` : '0ms',
-                                                transform: 'perspective(1000px) rotateY(-3deg)',
-                                                transformStyle: 'preserve-3d'
+                                                transitionDelay: projectsVisible ? `${idx * 150}ms` : '0ms'
                                             }}
                                         >
-                                            <div className="carousel-card-3d">
-                                                <ProjectCard
-                                                    title={project.title}
-                                                    description={project.description}
-                                                    features={project.features}
-                                                    tech={project.tech}
-                                                    highlights={project.highlights}
-                                                    github={project.github}
-                                                    demo={project.demo}
-                                                    image={project.image}
-                                                />
-                                            </div>
+                                            <ProjectCard
+                                                title={project.title}
+                                                description={project.description}
+                                                features={project.features}
+                                                tech={project.tech}
+                                                highlights={project.highlights}
+                                                github={project.github}
+                                                demo={project.demo}
+                                                image={project.image}
+                                            />
                                         </div>
                                     ))}
                                 </div>
