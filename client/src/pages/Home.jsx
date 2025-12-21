@@ -105,13 +105,14 @@ export default function Home() {
 
         let animationId;
         let isPaused = false;
+        let userScrollTimeout;
         let scrollSpeed = 0.3; // Slower speed - pixels per frame
 
         const smoothScroll = () => {
             if (!isPaused && carousel) {
                 const maxScroll = carousel.scrollWidth - carousel.clientWidth;
 
-                // If we're at the end, scroll back to start
+                // If we're at the end, smoothly loop back to start
                 if (carousel.scrollLeft >= maxScroll - 1) {
                     carousel.scrollLeft = 0;
                 } else {
@@ -131,15 +132,27 @@ export default function Home() {
             isPaused = false;
         };
 
+        // Pause on user scroll, resume after 3 seconds
+        const handleUserScroll = () => {
+            isPaused = true;
+            clearTimeout(userScrollTimeout);
+            userScrollTimeout = setTimeout(() => {
+                isPaused = false;
+            }, 3000); // Resume after 3 seconds of no scrolling
+        };
+
         carousel.addEventListener('mouseenter', handleMouseEnter);
         carousel.addEventListener('mouseleave', handleMouseLeave);
+        carousel.addEventListener('scroll', handleUserScroll, { passive: true });
 
         animationId = requestAnimationFrame(smoothScroll);
 
         return () => {
             cancelAnimationFrame(animationId);
+            clearTimeout(userScrollTimeout);
             carousel.removeEventListener('mouseenter', handleMouseEnter);
             carousel.removeEventListener('mouseleave', handleMouseLeave);
+            carousel.removeEventListener('scroll', handleUserScroll);
         };
     }, [projectsVisible]);
 
