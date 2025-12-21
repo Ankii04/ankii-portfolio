@@ -103,29 +103,23 @@ export default function Home() {
         const carousel = document.querySelector('#projects-carousel');
         if (!carousel) return;
 
-        let scrollInterval;
+        let animationId;
         let isPaused = false;
+        let scrollSpeed = 0.5; // Pixels per frame
 
-        const startAutoScroll = () => {
-            scrollInterval = setInterval(() => {
-                if (!isPaused && carousel) {
-                    const maxScroll = carousel.scrollWidth - carousel.clientWidth;
+        const smoothScroll = () => {
+            if (!isPaused && carousel) {
+                const maxScroll = carousel.scrollWidth - carousel.clientWidth;
 
-                    // If we're at the end, scroll back to start
-                    if (carousel.scrollLeft >= maxScroll - 5) {
-                        carousel.scrollTo({
-                            left: 0,
-                            behavior: 'smooth'
-                        });
-                    } else {
-                        // Smooth continuous scroll (small increments)
-                        carousel.scrollBy({
-                            left: 2, // Small increment for smooth continuous movement
-                            behavior: 'auto' // Use 'auto' for smoother continuous scroll
-                        });
-                    }
+                // If we're at the end, scroll back to start
+                if (carousel.scrollLeft >= maxScroll - 1) {
+                    carousel.scrollLeft = 0;
+                } else {
+                    // Smooth continuous scroll
+                    carousel.scrollLeft += scrollSpeed;
                 }
-            }, 30); // Faster interval for smoother animation
+            }
+            animationId = requestAnimationFrame(smoothScroll);
         };
 
         // Pause on hover
@@ -140,10 +134,10 @@ export default function Home() {
         carousel.addEventListener('mouseenter', handleMouseEnter);
         carousel.addEventListener('mouseleave', handleMouseLeave);
 
-        startAutoScroll();
+        animationId = requestAnimationFrame(smoothScroll);
 
         return () => {
-            clearInterval(scrollInterval);
+            cancelAnimationFrame(animationId);
             carousel.removeEventListener('mouseenter', handleMouseEnter);
             carousel.removeEventListener('mouseleave', handleMouseLeave);
         };
