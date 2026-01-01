@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useTheme } from "@/contexts/ThemeContext";
 
 export default function GitHubContributions({ username }) {
@@ -6,11 +6,37 @@ export default function GitHubContributions({ username }) {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [totalContributions, setTotalContributions] = useState(0);
+    const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
+    const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+    const [allContributions, setAllContributions] = useState([]);
+    const dropdownRef = useRef(null);
     const { theme } = useTheme();
+
+    // Available years for the dropdown
+    const availableYears = [2026, 2025, 2024, 2023];
 
     useEffect(() => {
         fetchContributions();
     }, [username]);
+
+    useEffect(() => {
+        // Filter contributions when year changes
+        if (allContributions.length > 0) {
+            filterContributionsByYear(selectedYear);
+        }
+    }, [selectedYear, allContributions]);
+
+    // Close dropdown when clicking outside
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+                setIsDropdownOpen(false);
+            }
+        };
+
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => document.removeEventListener("mousedown", handleClickOutside);
+    }, []);
 
     const fetchContributions = async () => {
         try {
@@ -24,18 +50,12 @@ export default function GitHubContributions({ username }) {
 
             const data = await response.json();
 
-            // Get current year's contributions
-            const currentYear = new Date().getFullYear();
-            const yearContributions = data.contributions.filter((day) => {
-                const year = new Date(day.date).getFullYear();
-                return year === currentYear;
-            });
+            // Store all contributions
+            setAllContributions(data.contributions);
 
-            // Calculate total for current year
-            const total = yearContributions.reduce((sum, day) => sum + day.count, 0);
+            // Filter for selected year
+            filterContributionsByYear(selectedYear, data.contributions);
 
-            setContributions(yearContributions);
-            setTotalContributions(total);
             setError(null);
         } catch (err) {
             setError("Unable to load GitHub contributions");
@@ -43,6 +63,19 @@ export default function GitHubContributions({ username }) {
         } finally {
             setLoading(false);
         }
+    };
+
+    const filterContributionsByYear = (year, contributionsData = allContributions) => {
+        const yearContributions = contributionsData.filter((day) => {
+            const dayYear = new Date(day.date).getFullYear();
+            return dayYear === year;
+        });
+
+        // Calculate total for selected year
+        const total = yearContributions.reduce((sum, day) => sum + day.count, 0);
+
+        setContributions(yearContributions);
+        setTotalContributions(total);
     };
 
     const getContributionColor = (level) => {
@@ -92,8 +125,86 @@ export default function GitHubContributions({ username }) {
         <div className="w-full">
             <div className="flex items-center justify-between mb-4">
                 <h3 className="text-xl font-bold">
-                    {totalContributions} contributions this year
+                    {totalContributions} contributions in {selectedYear}
                 </h3>
+
+                {/* Year Dropdown Button */}
+                <div className="relative" ref={dropdownRef}>
+                    <button
+                        onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+                        className={`
+                            flex items-center gap-2 px-4 py-2 rounded-md
+                            border transition-all duration-200
+                            ${theme === 'dark'
+                                ? 'bg-[#21262d] border-[#30363d] hover:bg-[#30363d] text-white'
+                                : 'bg-white border-gray-300 hover:bg-gray-50 text-gray-900'
+                            }
+                            font-semibold text-sm
+                        `}
+                    >
+                        <span>{selectedYear}</span>
+                        <svg
+                            className={`w-4 h-4 transition-transform duration-200 ${isDropdownOpen ? 'rotate-180' : ''}`}
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                        >
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                        </svg>
+                    </button>
+
+                    {/* Dropdown Menu */}
+                    {isDropdownOpen && (
+                        <div
+                            className={`
+                                absolute right-0 mt-2 w-40 rounded-md shadow-lg z-50
+                                border overflow-hidden
+                                ${theme === 'dark'
+                                    ? 'bg-[#161b22] border-[#30363d]'
+                                    : 'bg-white border-gray-200'
+                                }
+                                animate-in fade-in slide-in-from-top-2 duration-200
+                            `}
+                        >
+                            {availableYears.map((year) => (
+                                <button
+                                    key={year}
+                                    onClick={() => {
+                                        setSelectedYear(year);
+                                        setIsDropdownOpen(false);
+                                    }}
+                                    className={`
+                                        w-full px-4 py-2.5 text-left text-sm font-medium
+                                        transition-colors duration-150
+                                        flex items-center justify-between
+                                        ${theme === 'dark'
+                                            ? 'hover:bg-[#21262d] text-white'
+                                            : 'hover:bg-gray-100 text-gray-900'
+                                        }
+                                        ${selectedYear === year
+                                            ? theme === 'dark'
+                                                ? 'bg-[#21262d]'
+                                                : 'bg-gray-50'
+                                            : ''
+                                        }
+                                    `}
+                                >
+                                    <span>{year}</span>
+                                    {selectedYear === year && (
+                                        <svg
+                                            className="w-4 h-4 text-green-500"
+                                            fill="none"
+                                            stroke="currentColor"
+                                            viewBox="0 0 24 24"
+                                        >
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                                        </svg>
+                                    )}
+                                </button>
+                            ))}
+                        </div>
+                    )}
+                </div>
             </div>
 
             <div className="overflow-x-auto pb-4">
