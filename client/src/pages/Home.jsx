@@ -199,7 +199,7 @@ export default function Home() {
                                     >
                                         Contact Me
                                     </Button>
-                                    <a href="/Ankii_CV.pdf" target="_blank" rel="noopener noreferrer">
+                                    <a href="/Ankiii_CV.pdf" target="_blank" rel="noopener noreferrer">
                                         <Button
                                             size="lg"
                                             variant="outline"
