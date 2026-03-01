@@ -15,7 +15,7 @@ export const portfolioData = {
             field: "Computer Science Engineering",
             school: "Lovely Professional University – Phagwara, Punjab",
             duration: "Aug 23 - Present",
-            cgpa: "7.64",
+            cgpa: "7.89",
         },
         {
             degree: "Higher Secondary Certificate",
