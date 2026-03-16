@@ -31,8 +31,8 @@ export default function ProjectCard({
             >
                 {/* Front Side */}
                 <div
-                    className={`absolute inset-0 ${theme === "dark" ? "bg-[#1e293b]" : "bg-[#f0f0f0]"
-                        } backdrop-blur border border-border/50 rounded-xl overflow-hidden backface-hidden`}
+                    className={`absolute inset-0 ${theme === "dark" ? "bg-[#1e293b] border-border/50" : "bg-white border-black"
+                        } backdrop-blur border rounded-xl overflow-hidden backface-hidden`}
                     style={{ backfaceVisibility: "hidden" }}
                 >
                     <div className="h-full flex flex-col p-6">
@@ -92,8 +92,8 @@ export default function ProjectCard({
 
                 {/* Back Side */}
                 <div
-                    className={`absolute inset-0 ${theme === "dark" ? "bg-[#1e293b]" : "bg-[#f0f0f0]"
-                        } backdrop-blur border border-accent/50 rounded-xl overflow-hidden backface-hidden`}
+                    className={`absolute inset-0 ${theme === "dark" ? "bg-[#1e293b] border-accent/50" : "bg-white border-black"
+                        } backdrop-blur border rounded-xl overflow-hidden backface-hidden`}
                     style={{
                         backfaceVisibility: "hidden",
                         transform: "rotateY(180deg)",

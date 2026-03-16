@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { Mail, Github, Linkedin, Download, Home as HomeIcon, User, Code, Briefcase, Moon, Sun } from "lucide-react";
+import { Mail, Github, Linkedin, Download, Home as HomeIcon, User, Code, Briefcase, Moon, Sun, Trophy, Award, GraduationCap, School } from "lucide-react";
 import { portfolioData } from "@/data/portfolio";
 import LoadingInterface from "@/components/LoadingInterface";
 import { useState, useEffect } from "react";
@@ -11,6 +11,7 @@ import ProjectCard from "@/components/ProjectCard";
 import SkillCategory from "@/components/SkillCategory";
 import GitHubContributions from "@/components/GitHubContributions";
 import ContactModal from "@/components/ContactModal";
+import CertificationCard from "@/components/certifcationCard";
 
 export default function Home() {
     const [activeSection, setActiveSection] = useState("home");
@@ -19,11 +20,11 @@ export default function Home() {
     const [isContactModalOpen, setIsContactModalOpen] = useState(false);
 
     // Scroll animation states
-    const [aboutVisible, setAboutVisible] = useState(false);
     const [projectsVisible, setProjectsVisible] = useState(false);
     const [codingProfilesVisible, setCodingProfilesVisible] = useState(false);
     const [githubVisible, setGithubVisible] = useState(false);
     const [educationVisible, setEducationVisible] = useState(false);
+    const [achievementsVisible, setAchievementsVisible] = useState(false);
 
     const scrollToSection = (sectionId) => {
         setActiveSection(sectionId);
@@ -40,18 +41,18 @@ export default function Home() {
                     if (entry.isIntersecting) {
                         const id = entry.target.id;
                         if (id === "skills") setSkillsVisible(true);
-                        if (id === "about") setAboutVisible(true);
                         if (id === "projects") setProjectsVisible(true);
                         if (id === "coding-profiles") setCodingProfilesVisible(true);
                         if (id === "github-contributions") setGithubVisible(true);
                         if (id === "education") setEducationVisible(true);
+                        if (id === "achievements") setAchievementsVisible(true);
                     }
                 });
             },
             { threshold: 0.1 }
         );
 
-        const sections = ["skills", "about", "projects", "coding-profiles", "github-contributions", "education"];
+        const sections = ["skills", "projects", "coding-profiles", "github-contributions", "education", "achievements"];
         sections.forEach(id => {
             const element = document.getElementById(id);
             if (element) observer.observe(element);
@@ -100,64 +101,75 @@ export default function Home() {
 
     // Auto-scroll carousel effect - Infinite Ticker Style
     useEffect(() => {
-        const carousel = document.querySelector('#projects-carousel');
-        if (!carousel) return;
+        const setupCarousel = (id, visible, reverse = false) => {
+            const carousel = document.querySelector(id);
+            if (!carousel || !visible) return;
 
-        let animationId;
-        let isPaused = false;
-        let userScrollTimeout;
-        let scrollSpeed = 1.0; // Moderate speed - pixels per frame
+            let animationId;
+            let isPaused = false;
+            let userScrollTimeout;
+            const scrollSpeed = 0.9; // Slower, more cinematic
 
-        const smoothScroll = () => {
-            if (!isPaused && carousel) {
-                // For a seamless ticker, we reset position mid-way through the doubled content
-                // We'll calculate the midpoint later in the component or use scrollWidth / 2
-                const halfWay = carousel.scrollWidth / 2;
-
-                if (carousel.scrollLeft >= halfWay) {
-                    // Seamless reset to 0
-                    carousel.scrollLeft = 0;
-                } else {
-                    carousel.scrollLeft += scrollSpeed;
-                }
+            // For reverse (RTL) direction, start at the end
+            if (reverse) {
+                carousel.scrollLeft = carousel.scrollWidth / 2;
             }
+
+            const smoothScroll = () => {
+                if (!isPaused && carousel) {
+                    if (!reverse) {
+                        // LTR: scroll forward, loop back
+                        const halfWay = carousel.scrollWidth / 2;
+                        if (carousel.scrollLeft >= halfWay) {
+                            carousel.scrollLeft = 0;
+                        } else {
+                            carousel.scrollLeft += scrollSpeed;
+                        }
+                    } else {
+                        // RTL: scroll backward, loop to end
+                        if (carousel.scrollLeft <= 0) {
+                            carousel.scrollLeft = carousel.scrollWidth / 2;
+                        } else {
+                            carousel.scrollLeft -= scrollSpeed;
+                        }
+                    }
+                }
+                animationId = requestAnimationFrame(smoothScroll);
+            };
+
+            const handleMouseEnter = () => { isPaused = true; };
+            const handleMouseLeave = () => { isPaused = false; };
+            const handleManualInteraction = () => {
+                isPaused = true;
+                clearTimeout(userScrollTimeout);
+                userScrollTimeout = setTimeout(() => { isPaused = false; }, 2000);
+            };
+
+            carousel.addEventListener('mouseenter', handleMouseEnter);
+            carousel.addEventListener('mouseleave', handleMouseLeave);
+            carousel.addEventListener('mousedown', handleManualInteraction);
+            carousel.addEventListener('touchstart', handleManualInteraction, { passive: true });
+
             animationId = requestAnimationFrame(smoothScroll);
+
+            return () => {
+                cancelAnimationFrame(animationId);
+                clearTimeout(userScrollTimeout);
+                carousel.removeEventListener('mouseenter', handleMouseEnter);
+                carousel.removeEventListener('mouseleave', handleMouseLeave);
+                carousel.removeEventListener('mousedown', handleManualInteraction);
+                carousel.removeEventListener('touchstart', handleManualInteraction);
+            };
         };
 
-        // Pause on hover
-        const handleMouseEnter = () => {
-            isPaused = true;
-        };
-
-        const handleMouseLeave = () => {
-            isPaused = false;
-        };
-
-        // Pause on manual interaction
-        const handleManualInteraction = () => {
-            isPaused = true;
-            clearTimeout(userScrollTimeout);
-            userScrollTimeout = setTimeout(() => {
-                isPaused = false;
-            }, 2000);
-        };
-
-        carousel.addEventListener('mouseenter', handleMouseEnter);
-        carousel.addEventListener('mouseleave', handleMouseLeave);
-        carousel.addEventListener('mousedown', handleManualInteraction);
-        carousel.addEventListener('touchstart', handleManualInteraction, { passive: true });
-
-        animationId = requestAnimationFrame(smoothScroll);
+        const cleanupProjects = setupCarousel('#projects-carousel', projectsVisible, false);
+        const cleanupCerts = setupCarousel('#certs-carousel', achievementsVisible, true); // reverse direction
 
         return () => {
-            cancelAnimationFrame(animationId);
-            clearTimeout(userScrollTimeout);
-            carousel.removeEventListener('mouseenter', handleMouseEnter);
-            carousel.removeEventListener('mouseleave', handleMouseLeave);
-            carousel.removeEventListener('mousedown', handleManualInteraction);
-            carousel.removeEventListener('touchstart', handleManualInteraction);
+            if (cleanupProjects) cleanupProjects();
+            if (cleanupCerts) cleanupCerts();
         };
-    }, [projectsVisible]);
+    }, [projectsVisible, achievementsVisible]);
 
     return (
         <>
@@ -219,62 +231,72 @@ export default function Home() {
                                 </div>
                             </div>
                         </div>
-                        <nav className={`fixed bottom-2 left-1/2 -translate-x-1/2 z-20 backdrop-blur-md border border-border/50 rounded-full px-6 py-4 flex items-center justify-center gap-6 ${theme === "dark" ? "bg-black/40" : "bg-white/40"
-                            }`}>
+                        <nav className={`fixed bottom-2 left-1/2 -translate-x-1/2 z-20 backdrop-blur-md border ${theme === "dark" ? "border-border/50 bg-black/40" : "border-black bg-white/60"} rounded-full px-3 sm:px-6 py-4 flex items-center justify-center gap-2 sm:gap-6`}>
                             <button
                                 onClick={() => scrollToSection("home")}
-                                className={`w-12 h-12 rounded-full flex items-center justify-center transition-all ${activeSection === "home"
+                                className={`w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center transition-all ${activeSection === "home"
                                     ? "bg-accent/20 border border-accent text-accent"
-                                    : `${theme === "dark" ? "bg-[#1e293b]" : "bg-[#FAF9F6]"} border border-border/50 text-muted-foreground hover:border-accent/50`
+                                    : `${theme === "dark" ? "bg-[#1e293b] border-border/50" : "bg-white border-black"} border text-muted-foreground hover:border-accent/50`
                                     }`}
                                 title="Home"
                             >
-                                <HomeIcon className="w-5 h-5" />
+                                <HomeIcon className="w-4 h-4 sm:w-5 sm:h-5" />
                             </button>
                             <button
                                 onClick={() => scrollToSection("skills")}
-                                className={`w-12 h-12 rounded-full flex items-center justify-center transition-all ${activeSection === "skills"
+                                className={`w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center transition-all ${activeSection === "skills"
                                     ? "bg-accent/20 border border-accent text-accent"
-                                    : `${theme === "dark" ? "bg-[#2a2a2a]" : "bg-[#FAF9F6]"} border border-border/50 text-muted-foreground hover:border-accent/50`
+                                    : `${theme === "dark" ? "bg-[#2a2a2a] border-border/50" : "bg-white border-black"} border text-muted-foreground hover:border-accent/50`
                                     }`}
                                 title="Skills"
                             >
-                                <User className="w-5 h-5" />
+                                <Code className="w-4 h-4 sm:w-5 sm:h-5" />
                             </button>
                             <button
                                 onClick={() => scrollToSection("projects")}
-                                className={`w-12 h-12 rounded-full flex items-center justify-center transition-all ${activeSection === "projects"
+                                className={`w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center transition-all ${activeSection === "projects"
                                     ? "bg-accent/20 border border-accent text-accent"
-                                    : `${theme === "dark" ? "bg-[#2a2a2a]" : "bg-white"} border border-border/50 text-muted-foreground hover:border-accent/50`
+                                    : `${theme === "dark" ? "bg-[#2a2a2a] border-border/50" : "bg-white border-black shadow-sm"} border text-muted-foreground hover:border-accent/50`
                                     }`}
                                 title="Projects"
                             >
-                                <Code className="w-5 h-5" />
+                                <Award className="w-4 h-4 sm:w-5 sm:h-5" />
+                            </button>
+                            <button
+                                onClick={() => scrollToSection("achievements")}
+                                className={`w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center transition-all ${activeSection === "achievements"
+                                    ? "bg-accent/20 border border-accent text-accent"
+                                    : `${theme === "dark" ? "bg-[#2a2a2a] border-border/50" : "bg-white border-black"} border text-muted-foreground hover:border-accent/50`
+                                    }`}
+                                title="Achievements"
+                            >
+                                <Trophy className="w-4 h-4 sm:w-5 sm:h-5" />
                             </button>
                             <button
                                 onClick={() => scrollToSection("education")}
-                                className={`w-12 h-12 rounded-full flex items-center justify-center transition-all ${activeSection === "education"
+                                className={`w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center transition-all ${activeSection === "education"
                                     ? "bg-accent/20 border border-accent text-accent"
-                                    : `${theme === "dark" ? "bg-[#2a2a2a]" : "bg-white"} border border-border/50 text-muted-foreground hover:border-accent/50`
+                                    : `${theme === "dark" ? "bg-[#2a2a2a] border-border/50" : "bg-white border-black"} border text-muted-foreground hover:border-accent/50`
                                     }`}
                                 title="Education"
                             >
-                                <Briefcase className="w-5 h-5" />
+                                <Briefcase className="w-4 h-4 sm:w-5 sm:h-5" />
                             </button>
                             <button
                                 onClick={() => scrollToSection("contact")}
-                                className={`w-12 h-12 rounded-full flex items-center justify-center transition-all ${activeSection === "contact"
+                                className={`w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center transition-all ${activeSection === "contact"
                                     ? "bg-accent/20 border border-accent text-accent"
-                                    : `${theme === "dark" ? "bg-[#2a2a2a]" : "bg-white"} border border-border/50 text-muted-foreground hover:border-accent/50`
+                                    : `${theme === "dark" ? "bg-[#2a2a2a] border-border/50" : "bg-white border-black"} border text-muted-foreground hover:border-accent/50`
                                     }`}
                                 title="Contact"
                             >
-                                <Mail className="w-5 h-5" />
+                                <Mail className="w-4 h-4 sm:w-5 sm:h-5" />
                             </button>
                         </nav>
                     </section>
 
-                    <section id="skills" className="py-10 px-4">
+
+                    <section id="skills" className="min-h-screen scroll-mt-2 flex flex-col justify-center py-20 pb-32 px-4">
                         <div className="max-w-5xl mx-auto">
                             <div className="text-center mb-16">
                                 <p className="text-accent uppercase tracking-[0.3em] text-sm font-semibold mb-4">Tech Stack</p>
@@ -323,20 +345,22 @@ export default function Home() {
                         </div>
                     </section>
 
-                    <section id="projects" className={`py-10 px-4 transition-all duration-[1500ms] ${projectsVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
+                    <section id="projects" className={`min-h-screen scroll-mt-2 flex flex-col justify-center py-20 pb-32 px-4 transition-all duration-[1500ms] ${projectsVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
                         <div className="max-w-6xl mx-auto">
                             <h2 className="text-4xl md:text-5xl font-bold mb-4 text-center">Featured Projects</h2>
                             <p className="text-center text-muted-foreground mb-12">
                                 Auto-scrolling gallery • Hover to pause
                             </p>
-                            <div className="relative overflow-hidden">
-                                {/* 3D Carousel Container */}
+                            {/* overflow-visible so the 3D card flip is NOT clipped */}
+                            <div className="relative overflow-visible">
+                                {/* 3D Carousel Container — overflow-x-auto only for scroll, not clip */}
                                 <div
                                     id="projects-carousel"
-                                    className="flex gap-6 overflow-x-auto pb-6 hide-scrollbar pointer-events-auto"
+                                    className="flex gap-6 overflow-x-auto pb-8 pt-2 hide-scrollbar pointer-events-auto"
                                     style={{
                                         scrollbarWidth: 'none',
-                                        msOverflowStyle: 'none'
+                                        msOverflowStyle: 'none',
+                                        overflowY: 'visible',
                                     }}
                                 >
                                     {[...portfolioData.projects, ...portfolioData.projects].map((project, idx) => (
@@ -364,7 +388,102 @@ export default function Home() {
                         </div>
                     </section>
 
-                    <section id="coding-profiles" className={`py-20 px-4 transition-all duration-[1500ms] ${codingProfilesVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
+                    <section id="achievements" className={`min-h-screen scroll-mt-2 px-4 py-20 pb-32 flex flex-col justify-center transition-all duration-[1500ms] ${achievementsVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
+                        <div className="max-w-6xl mx-auto w-full flex flex-col gap-12">
+                            {/* Header */}
+                            <div className="text-center">
+                                <h2 className="text-4xl md:text-5xl font-bold mb-4 flex items-center justify-center gap-3">
+                                    <Trophy className="w-10 h-10 text-accent" />
+                                    Professional Certifications
+                                </h2>
+                                <p className="text-muted-foreground text-lg max-w-xl mx-auto">
+                                    Curated collection of my academic and technical certifications
+                                </p>
+                            </div>
+
+                            {/* Certifications Carousel — scrolls RIGHT to LEFT */}
+                            <div className="relative overflow-hidden">
+                                <div
+                                    id="certs-carousel"
+                                    className="flex gap-6 overflow-x-auto pb-4 hide-scrollbar pointer-events-auto"
+                                    style={{
+                                        border: 'none',
+                                        scrollbarWidth: 'none',
+                                        msOverflowStyle: 'none'
+                                    }}
+                                >
+                                    {[...portfolioData.certifications, ...portfolioData.certifications].map((cert, idx) => (
+                                        <div
+                                            key={idx}
+                                            className="flex-shrink-0 w-[85vw] sm:w-[360px] transition-all duration-1000"
+                                            style={{
+                                                transitionDelay: achievementsVisible ? `${(idx % portfolioData.certifications.length) * 150}ms` : '0ms'
+                                            }}
+                                        >
+                                            <CertificationCard
+                                                title={cert.title}
+                                                issuer={cert.issuer}
+                                                date={cert.date}
+                                                description={cert.description}
+                                                image={cert.image}
+                                                link={cert.link}
+                                            />
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    {/* ── Achievements & Events — fills one full viewport ── */}
+                    <section className={`min-h-screen py-20 px-4 flex flex-col justify-center transition-all duration-[1500ms] ${achievementsVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
+                        <div className="max-w-6xl mx-auto w-full flex flex-col gap-12">
+                            {/* Header */}
+                            <div className="text-center">
+                                <p className="text-accent uppercase tracking-[0.3em] text-sm font-semibold mb-3">🎖️ Honors &amp; Milestones</p>
+                                <h2 className="text-4xl md:text-5xl font-bold mb-4 flex items-center justify-center gap-3">
+                                    <Award className="w-10 h-10 text-accent" />
+                                    Achievements &amp; Events
+                                </h2>
+                                <p className="text-muted-foreground text-lg max-w-xl mx-auto">
+                                    Competitions, hackathons, and milestones that shaped my journey
+                                </p>
+                            </div>
+
+                            {/* Achievement Cards Grid */}
+                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                                {[
+                                    { emoji: '🧠', text: portfolioData.achievements[0] },
+                                    { emoji: '⚡', text: portfolioData.achievements[1] },
+                                    { emoji: '🍴', text: portfolioData.achievements[2] },
+                                    { emoji: '🔐', text: portfolioData.achievements[3] },
+                                    { emoji: '💻', text: portfolioData.achievements[4] },
+                                    { emoji: '🌐', text: portfolioData.achievements[5] },
+                                ].map((item, idx) => (
+                                    <div
+                                        key={idx}
+                                        className={`group relative p-6 rounded-2xl border border-border/40 ${
+                                            theme === 'dark' ? 'bg-slate-900/50' : 'bg-white/60'
+                                        } backdrop-blur-md hover:border-accent/60 transition-all duration-500 shadow-md hover:shadow-accent/10 hover:shadow-xl overflow-hidden ${
+                                            achievementsVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
+                                        }`}
+                                        style={{ transitionDelay: achievementsVisible ? `${idx * 120}ms` : '0ms' }}
+                                    >
+                                        {/* Accent glow bar on left */}
+                                        <div className="absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-b from-accent via-accent/60 to-transparent rounded-l-2xl" />
+                                        <div className="flex items-start gap-4 pl-3">
+                                            <span className="text-3xl mt-0.5 flex-shrink-0">{item.emoji}</span>
+                                            <p className="text-sm md:text-base text-muted-foreground group-hover:text-foreground transition-colors font-medium leading-relaxed">
+                                                {item.text}
+                                            </p>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    </section>
+
+                    <section id="coding-profiles" className={`min-h-screen scroll-mt-2 flex flex-col justify-center py-20 pb-32 px-4 transition-all duration-[1500ms] ${codingProfilesVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
                         <div className="max-w-4xl mx-auto text-center">
                             <h2 className="text-4xl md:text-5xl font-bold mb-2 flex items-center justify-center gap-2">
                                 <span role="img" aria-label="trophy">🏆</span> Coding Profiles
@@ -379,7 +498,7 @@ export default function Home() {
                                     style={{ transitionDelay: codingProfilesVisible ? '0ms' : '0ms' }}
                                 >
                                     <div className={`absolute -inset-[2px] bg-gradient-to-r from-green-500 via-teal-500 to-blue-500 rounded-xl opacity-0 group-hover:opacity-100 blur-sm transition-opacity duration-500`}></div>
-                                    <div className={`relative ${theme === "dark" ? "bg-[#1e293b]/80" : "bg-[#f0f0f0]/80"} backdrop-blur-xl border ${theme === "dark" ? "border-white/10" : "border-black/10"} rounded-xl p-8 flex flex-col items-center transition-all shadow-xl hover:shadow-2xl duration-1000 ${codingProfilesVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
+                                    <div className={`relative ${theme === "dark" ? "bg-[#1e293b]/80 border-white/10" : "bg-white border-black"} backdrop-blur-xl border rounded-xl p-8 flex flex-col items-center transition-all shadow-xl hover:shadow-2xl duration-1000 ${codingProfilesVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
                                         <img src="https://upload.wikimedia.org/wikipedia/commons/1/19/LeetCode_logo_black.png" alt="LeetCode" className="w-16 h-16 mb-4" />
                                         <span className="text-lg font-semibold mb-2">LeetCode</span>
                                     </div>
@@ -392,7 +511,7 @@ export default function Home() {
                                     style={{ transitionDelay: codingProfilesVisible ? '200ms' : '0ms' }}
                                 >
                                     <div className={`absolute -inset-[2px] bg-gradient-to-r from-green-500 via-teal-500 to-blue-500 rounded-xl opacity-0 group-hover:opacity-100 blur-sm transition-opacity duration-500`}></div>
-                                    <div className={`relative ${theme === "dark" ? "bg-[#1e293b]/80" : "bg-[#f0f0f0]/80"} backdrop-blur-xl border ${theme === "dark" ? "border-white/10" : "border-black/10"} rounded-xl p-8 flex flex-col items-center transition-all shadow-xl hover:shadow-2xl duration-1000 ${codingProfilesVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
+                                    <div className={`relative ${theme === "dark" ? "bg-[#1e293b]/80 border-white/10" : "bg-white border-black"} backdrop-blur-xl border rounded-xl p-8 flex flex-col items-center transition-all shadow-xl hover:shadow-2xl duration-1000 ${codingProfilesVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
                                         <img src="https://upload.wikimedia.org/wikipedia/commons/4/43/GeeksforGeeks.svg" alt="GeeksforGeeks" className="w-16 h-16 mb-4" />
                                         <span className="text-lg font-semibold mb-2">GeeksforGeeks</span>
                                     </div>
@@ -405,17 +524,17 @@ export default function Home() {
                                     style={{ transitionDelay: codingProfilesVisible ? '400ms' : '0ms' }}
                                 >
                                     <div className={`absolute -inset-[2px] bg-gradient-to-r from-green-500 via-teal-500 to-blue-500 rounded-xl opacity-0 group-hover:opacity-100 blur-sm transition-opacity duration-500`}></div>
-                                    <div className={`relative ${theme === "dark" ? "bg-[#1e293b]/80" : "bg-[#f0f0f0]/80"} backdrop-blur-xl border ${theme === "dark" ? "border-white/10" : "border-black/10"} rounded-xl p-8 flex flex-col items-center transition-all shadow-xl hover:shadow-2xl duration-1000 ${codingProfilesVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
+                                    <div className={`relative ${theme === "dark" ? "bg-[#1e293b]/80 border-white/10" : "bg-white border-black"} backdrop-blur-xl border rounded-xl p-8 flex flex-col items-center transition-all shadow-xl hover:shadow-2xl duration-1000 ${codingProfilesVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
                                         <img src="https://upload.wikimedia.org/wikipedia/commons/6/65/HackerRank_logo.png" alt="HackerRank" className="w-16 h-16 mb-4" />
                                         <span className="text-lg font-semibold mb-2">HackerRank</span>
                                     </div>
                                 </a>
                             </div>
-                            <p className="mt-8 text-muted-foreground">Total Problems Solved: <span className="text-accent font-bold">200+</span> across all platforms</p>
+                            <p className="mt-8 text-muted-foreground">Total Problems Solved: <span className="text-accent font-bold">350+</span> across all platforms</p>
                         </div>
                     </section>
 
-                    <section id="github-contributions" className={`py-20 px-4 transition-all duration-[1500ms] ${githubVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
+                    <section id="github-contributions" className={`min-h-screen scroll-mt-2 flex flex-col justify-center py-20 pb-32 px-4 transition-all duration-[1500ms] ${githubVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
                         <div className="max-w-4xl mx-auto">
                             <h2 className="text-4xl md:text-5xl font-bold mb-4 text-center flex items-center justify-center gap-2">
                                 <Github className="w-10 h-10 text-accent" />
@@ -426,45 +545,90 @@ export default function Home() {
                             </p>
                             <div className="relative group">
                                 <div className={`absolute -inset-[2px] bg-gradient-to-r from-green-400 via-blue-500 to-purple-600 rounded-xl opacity-0 group-hover:opacity-100 blur-sm transition-opacity duration-500`}></div>
-                                <div className={`relative ${theme === "dark" ? "bg-[#1e293b]" : "bg-[#FAF9F6]"} backdrop-blur border border-border/50 rounded-xl p-6`}>
+                                <div className={`relative ${theme === "dark" ? "bg-[#1e293b] border-border/50" : "bg-white border-black"} backdrop-blur border rounded-xl p-6`}>
                                     <GitHubContributions username={portfolioData.github} />
                                 </div>
                             </div>
                         </div>
                     </section>
 
-                    <section id="education" className={`py-10 px-4 transition-all duration-[1500ms] ${educationVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
-                        <div className="max-w-4xl mx-auto">
-                            <h2 className="text-4xl md:text-5xl font-bold mb-12 text-center">Education</h2>
-                            <div className="space-y-6">
+                    <section id="education" className={`min-h-screen scroll-mt-2 px-4 py-20 pb-32 flex flex-col justify-center transition-all duration-[1500ms] ${educationVisible ? 'opacity-100' : 'opacity-0'}`}>
+                        <div className="max-w-4xl mx-auto w-full">
+                            {/* Section Header */}
+                            <div className="text-center mb-20">
+                                <div className="inline-flex items-center justify-center p-3 rounded-2xl bg-accent/10 mb-4">
+                                    <GraduationCap className="w-8 h-8 text-accent" />
+                                </div>
+                                <h2 className="text-4xl md:text-5xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-foreground to-foreground/60">
+                                    Educational Journey
+                                </h2>
+                                <p className="text-muted-foreground text-lg max-w-xl mx-auto">
+                                    A timeline of my academic milestones and foundational learning.
+                                </p>
+                            </div>
+
+                            {/* Timeline Container with Animated Line */}
+                            <div className="relative ml-4 md:ml-8 space-y-12 pb-8">
+                                {/* Base Timeline Line (Static) */}
+                                <div className="absolute left-0 top-0 bottom-0 w-0.5 bg-border/20 rounded-full" />
+                                
+                                {/* Active Growing Line (Animated) */}
+                                <div 
+                                    className="absolute left-0 top-0 w-0.5 bg-gradient-to-b from-accent/0 via-accent to-accent/0 origin-top transition-all duration-[2000ms] ease-out rounded-full shadow-[0_0_20px_rgba(var(--accent-rgb),0.5)]"
+                                    style={{ 
+                                        height: educationVisible ? '100%' : '0%',
+                                        backgroundSize: '100% 200%',
+                                    }} 
+                                />
+
                                 {portfolioData.education.map((edu, idx) => (
                                     <div
                                         key={idx}
-                                        className={`relative group transition-all duration-1000 ${educationVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}
-                                        style={{ transitionDelay: educationVisible ? `${idx * 250}ms` : '0ms' }}
+                                        className={`relative pl-8 md:pl-12 transition-all duration-1000 ${educationVisible ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-10'}`}
+                                        style={{ transitionDelay: educationVisible ? `${idx * 200}ms` : '0ms' }}
                                     >
-                                        <div className={`absolute -inset-[2px] rounded-2xl opacity-0 group-hover:opacity-100 blur-sm transition-opacity duration-500 ${theme === "dark" ? "bg-gradient-to-r from-slate-700 via-slate-600 to-slate-700" : "bg-gradient-to-r from-gray-300 via-gray-200 to-gray-300"}`}></div>
-                                        <div className={`relative ${theme === "dark" ? "bg-[#1e293b]/80" : "bg-[#f0f0f0]/80"} backdrop-blur-xl border ${theme === "dark" ? "border-white/10" : "border-black/10"} rounded-2xl p-8 shadow-xl hover:shadow-2xl transition-all duration-1000`}>
-                                            <div className="flex items-start gap-6">
-                                                {/* Icon */}
-                                                <div className="w-14 h-14 rounded-xl bg-accent/10 flex items-center justify-center flex-shrink-0">
-                                                    <Code className="w-7 h-7 text-accent" />
-                                                </div>
+                                        {/* Timeline Marker (Dot) */}
+                                        <div className="absolute -left-[7px] top-0 w-[14px] h-[14px] rounded-full bg-accent border-2 border-background shadow-[0_0_10px_rgba(var(--accent-rgb),0.5)] z-10 group-hover:scale-150 transition-transform duration-300" />
+                                        
+                                        {/* Year Badge */}
+                                        <div className="mb-2 inline-block px-3 py-1 rounded-full bg-accent/10 border border-accent/20 text-accent text-xs font-bold uppercase tracking-wider">
+                                            {edu.duration}
+                                        </div>
 
-                                                {/* Content */}
-                                                <div className="flex-1">
-                                                    <h3 className="text-2xl md:text-3xl font-bold mb-2">{edu.degree}</h3>
-                                                    <p className="text-lg italic text-muted-foreground mb-1">{edu.field}</p>
-                                                    <p className="text-base italic text-muted-foreground/80 mb-6">{edu.school}</p>
+                                        {/* Card Wrapper */}
+                                        <div className="group relative">
+                                            {/* Glow effect on hover */}
+                                            <div className="absolute -inset-0.5 bg-gradient-to-r from-accent/0 via-accent/20 to-accent/0 rounded-2xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                                            
+                                            {/* Main Card */}
+                                            <div className={`relative ${theme === "dark" ? "bg-[#1e293b]/50 border-border/40" : "bg-white border-black"} backdrop-blur-xl border rounded-2xl p-6 md:p-8 hover:border-accent/40 shadow-lg hover:shadow-accent/5 transition-all duration-500`}>
+                                                {/* Left Accent Bar */}
+                                                <div className="absolute left-0 top-6 bottom-6 w-1 bg-accent rounded-r-full opacity-60" />
+                                                
+                                                <div className="flex flex-col md:flex-row md:items-start justify-between gap-6">
+                                                    <div className="space-y-4 flex-1">
+                                                        <div className="space-y-1">
+                                                            <h3 className="text-2xl md:text-3xl font-bold text-foreground group-hover:text-accent transition-colors duration-300 leading-tight">
+                                                                {edu.degree}
+                                                            </h3>
+                                                            <div className="flex items-center gap-2 text-accent/80 font-semibold italic">
+                                                                <School className="w-4 h-4" />
+                                                                {edu.field}
+                                                            </div>
+                                                        </div>
+                                                        
+                                                        <p className="text-lg text-muted-foreground/90 font-medium">
+                                                            {edu.school}
+                                                        </p>
 
-                                                    {/* Bottom Row: Date and CGPA */}
-                                                    <div className="flex items-center justify-between">
-                                                        <p className="text-sm italic text-muted-foreground">{edu.duration}</p>
-                                                        <div className={`flex items-center gap-2 ${theme === "dark" ? "bg-accent/10" : "bg-accent/5"} border border-accent/30 rounded-lg px-4 py-2`}>
-                                                            <span className="text-yellow-500">⭐</span>
-                                                            <span className="text-lg font-bold">
-                                                                {edu.cgpa || edu.percentage}
-                                                            </span>
+                                                        {/* Details Footer */}
+                                                        <div className="pt-2 flex flex-wrap items-center gap-4">
+                                                            <div className={`flex items-center gap-2 px-4 py-2 rounded-xl ${theme === "dark" ? "bg-slate-800/50 border-border/50" : "bg-white border-black"} border`}>
+                                                                <span className="text-yellow-500 text-sm">⭐</span>
+                                                                <span className="font-bold text-foreground">
+                                                                    {edu.cgpa || edu.percentage}
+                                                                </span>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -476,7 +640,7 @@ export default function Home() {
                         </div>
                     </section>
 
-                    <section id="contact" className="py-20 px-4">
+                    <section id="contact" className="min-h-screen scroll-mt-2 flex flex-col justify-center py-20 pb-32 px-4">
                         <div className="max-w-4xl mx-auto text-center">
                             <p className="text-muted-foreground uppercase tracking-widest mb-4">Have a project in mind?</p>
                             <h2 className="text-5xl md:text-6xl font-bold mb-8">Let's Talk</h2>
@@ -521,7 +685,7 @@ export default function Home() {
                                     <Code className="w-5 h-5" />
                                 </a>
                                 <a
-                                    href="/Ankii_CV.pdf"
+                                    href="/Ankiii_CV.pdf"
                                     download
                                     className={`w-12 h-12 rounded-full ${theme === "dark" ? "bg-card/50" : "bg-white/50"} backdrop-blur border border-border/50 flex items-center justify-center hover:border-accent/50 transition-colors`}
                                     title="Download CV"

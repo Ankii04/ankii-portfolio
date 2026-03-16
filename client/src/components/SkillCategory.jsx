@@ -18,9 +18,9 @@ export default function SkillCategory({
         >
             <div
                 className={`relative ${theme === "dark"
-                    ? "bg-[#1e293b]/80"
-                    : "bg-[#f0f0f0]/80"
-                    } backdrop-blur-xl border ${theme === "dark" ? "border-white/10" : "border-black/10"} rounded-2xl p-8 transition-all duration-300 hover:border-accent/50 shadow-xl hover:shadow-2xl`}
+                    ? "bg-[#1e293b]/80 border-white/10"
+                    : "bg-white border-black"
+                    } backdrop-blur-xl border rounded-2xl p-8 transition-all duration-300 hover:border-accent/50 shadow-xl hover:shadow-2xl`}
             >
                 {/* Header */}
                 <div className="flex items-center gap-3 mb-8 pb-4 border-b border-border/20">
@@ -41,9 +41,9 @@ export default function SkillCategory({
                             >
                                 <div
                                     className={`w-16 h-16 rounded-xl flex items-center justify-center text-2xl font-bold transition-all duration-300 group-hover/item:scale-110 group-hover/item:shadow-lg ${theme === "dark"
-                                        ? "bg-black/40 hover:bg-black/60"
-                                        : "bg-white/60 hover:bg-white/80"
-                                        }`}
+                                        ? "bg-black/40 hover:bg-black/60 border-white/5"
+                                        : "bg-white hover:bg-white/80 border-black"
+                                        } border`}
                                 >
                                     {IconComponent ? (
                                         <IconComponent className="w-8 h-8 drop-shadow-lg" />

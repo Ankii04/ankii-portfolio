@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { Mail, Github, Linkedin, Download, Home as HomeIcon, User, Code, Briefcase, Moon, Sun } from "lucide-react";
+import { Mail, Github, Linkedin, Download, Home as HomeIcon, User, Code, Briefcase, Moon, Sun, Trophy, Award } from "lucide-react";
 import { portfolioData } from "@/data/portfolio";
 import LoadingInterface from "@/components/LoadingInterface";
 import { useState, useEffect } from "react";
@@ -11,6 +11,7 @@ import ProjectCard from "@/components/ProjectCard";
 import SkillCategory from "@/components/SkillCategory";
 import GitHubContributions from "@/components/GitHubContributions";
 import ContactModal from "@/components/ContactModal";
+import CertificationCard from "@/components/certifcationCard";
 
 export default function Home() {
   const [activeSection, setActiveSection] = useState("home");
@@ -24,6 +25,7 @@ export default function Home() {
   const [codingProfilesVisible, setCodingProfilesVisible] = useState(false);
   const [githubVisible, setGithubVisible] = useState(false);
   const [educationVisible, setEducationVisible] = useState(false);
+  const [achievementsVisible, setAchievementsVisible] = useState(false);
 
   const scrollToSection = (sectionId: string) => {
     setActiveSection(sectionId);
@@ -45,13 +47,14 @@ export default function Home() {
             if (id === "coding-profiles") setCodingProfilesVisible(true);
             if (id === "github-contributions") setGithubVisible(true);
             if (id === "education") setEducationVisible(true);
+            if (id === "achievements") setAchievementsVisible(true);
           }
         });
       },
       { threshold: 0.1 }
     );
 
-    const sections = ["skills", "about", "projects", "coding-profiles", "github-contributions", "education"];
+    const sections = ["skills", "about", "projects", "coding-profiles", "github-contributions", "education", "achievements"];
     sections.forEach(id => {
       const element = document.getElementById(id);
       if (element) observer.observe(element);
@@ -70,33 +73,62 @@ export default function Home() {
   const [isDeleting, setIsDeleting] = useState(false);
   const roles = ["Full Stack Developer", "UI/UX Developer"];
 
+  // Auto-scroll carousel effect - Infinite Ticker Style
   useEffect(() => {
-    const currentText = roles[currentRole];
-    const typingSpeed = isDeleting ? 50 : 100;
+    const setupCarousel = (id: string, visible: boolean) => {
+      const carousel = document.querySelector(id) as HTMLElement;
+      if (!carousel || !visible) return;
 
-    const timeout = setTimeout(() => {
-      if (!isDeleting) {
-        // Typing
-        if (displayedText.length < currentText.length) {
-          setDisplayedText(currentText.slice(0, displayedText.length + 1));
-        } else {
-          // Finished typing, wait then start deleting
-          setTimeout(() => setIsDeleting(true), 2000);
-        }
-      } else {
-        // Deleting
-        if (displayedText.length > 0) {
-          setDisplayedText(displayedText.slice(0, -1));
-        } else {
-          // Finished deleting, move to next role
-          setIsDeleting(false);
-          setCurrentRole((prev) => (prev + 1) % roles.length);
-        }
-      }
-    }, typingSpeed);
+      let animationId: number;
+      let isPaused = false;
+      let userScrollTimeout: NodeJS.Timeout;
+      let scrollSpeed = 1.0;
 
-    return () => clearTimeout(timeout);
-  }, [displayedText, isDeleting, currentRole]);
+      const smoothScroll = () => {
+        if (!isPaused && carousel) {
+          const halfWay = carousel.scrollWidth / 2;
+          if (carousel.scrollLeft >= halfWay) {
+            carousel.scrollLeft = 0;
+          } else {
+            carousel.scrollLeft += scrollSpeed;
+          }
+        }
+        animationId = requestAnimationFrame(smoothScroll);
+      };
+
+      const handleMouseEnter = () => { isPaused = true; };
+      const handleMouseLeave = () => { isPaused = false; };
+      const handleManualInteraction = () => {
+        isPaused = true;
+        clearTimeout(userScrollTimeout);
+        userScrollTimeout = setTimeout(() => { isPaused = false; }, 2000);
+      };
+
+      carousel.addEventListener('mouseenter', handleMouseEnter);
+      carousel.addEventListener('mouseleave', handleMouseLeave);
+      carousel.addEventListener('mousedown', handleManualInteraction);
+      carousel.addEventListener('touchstart', handleManualInteraction, { passive: true });
+
+      animationId = requestAnimationFrame(smoothScroll);
+
+      return () => {
+        cancelAnimationFrame(animationId);
+        clearTimeout(userScrollTimeout);
+        carousel.removeEventListener('mouseenter', handleMouseEnter);
+        carousel.removeEventListener('mouseleave', handleMouseLeave);
+        carousel.removeEventListener('mousedown', handleManualInteraction);
+        carousel.removeEventListener('touchstart', handleManualInteraction);
+      };
+    };
+
+    const cleanupProjects = setupCarousel('#projects-carousel', projectsVisible);
+    const cleanupCerts = setupCarousel('#certs-carousel', achievementsVisible);
+
+    return () => {
+      if (cleanupProjects) cleanupProjects();
+      if (cleanupCerts) cleanupCerts();
+    };
+  }, [projectsVisible, achievementsVisible]);
 
   return (
     <>
@@ -199,6 +231,16 @@ export default function Home() {
                 title="Education"
               >
                 <Briefcase className="w-5 h-5" />
+              </button>
+              <button
+                onClick={() => scrollToSection("achievements")}
+                className={`w-12 h-12 rounded-full flex items-center justify-center transition-all ${activeSection === "achievements"
+                  ? "bg-accent/20 border border-accent text-accent"
+                  : `${theme === "dark" ? "bg-[#2a2a2a]" : "bg-white"} border border-border/50 text-muted-foreground hover:border-accent/50`
+                  }`}
+                title="Achievements"
+              >
+                <Trophy className="w-5 h-5" />
               </button>
               <button
                 onClick={() => scrollToSection("contact")}
@@ -399,6 +441,68 @@ export default function Home() {
                     </div>
                   </div>
                 ))}
+              </div>
+            </div>
+          </section>
+
+          <section id="achievements" className={`py-10 px-4 transition-all duration-[1500ms] ${achievementsVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
+            <div className="max-w-6xl mx-auto">
+              <h2 className="text-4xl md:text-5xl font-bold mb-4 text-center flex items-center justify-center gap-3">
+                <Trophy className="w-10 h-10 text-accent" />
+                Professional Certifications
+              </h2>
+              <p className="text-center text-muted-foreground mb-12">
+                Curated collection of my academic and technical certifications
+              </p>
+
+              <div className="relative overflow-hidden">
+                <div
+                  id="certs-carousel"
+                  className="flex gap-6 overflow-x-auto pb-6 hide-scrollbar pointer-events-auto"
+                  style={{
+                    border: 'none',
+                    scrollbarWidth: 'none',
+                    msOverflowStyle: 'none'
+                  }}
+                >
+                  {[...portfolioData.certifications, ...portfolioData.certifications].map((cert: any, idx: number) => (
+                    <div
+                      key={idx}
+                      className="flex-shrink-0 w-[85vw] sm:w-[350px] transition-all duration-1000"
+                      style={{
+                        transitionDelay: achievementsVisible ? `${(idx % portfolioData.certifications.length) * 150}ms` : '0ms'
+                      }}
+                    >
+                      <CertificationCard
+                        title={cert.title}
+                        issuer={cert.issuer}
+                        date={cert.date}
+                        description={cert.description}
+                        image={cert.image}
+                        link={cert.link}
+                      />
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div className="mt-20">
+                <h3 className="text-3xl font-bold mb-10 text-center flex items-center justify-center gap-2">
+                  <Award className="w-8 h-8 text-accent" /> Achievements & Events
+                </h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {portfolioData.achievements.map((achievement: any, idx: number) => (
+                    <div
+                      key={idx}
+                      className={`p-6 rounded-2xl border border-border/50 ${theme === "dark" ? "bg-slate-900/40" : "bg-slate-50/40"} backdrop-blur-md hover:border-accent/50 transition-all group border-l-4 border-l-accent shadow-lg shadow-accent/5 ${achievementsVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}
+                      style={{ transitionDelay: achievementsVisible ? `${(idx + portfolioData.certifications.length) * 100}ms` : '0ms' }}
+                    >
+                      <p className="text-muted-foreground group-hover:text-foreground transition-colors font-medium">
+                        {achievement}
+                      </p>
+                    </div>
+                  ))}
+                </div>
               </div>
             </div>
           </section>
